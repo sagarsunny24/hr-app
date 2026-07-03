@@ -1,8 +1,28 @@
-server/.env
-server/node_modules
+# dependencies
+node_modules/
 
-shared/node_modules
-shared/.env
+# build output
+dist/
+build/
 
-client/node_modules
-client/.env
+# environment variables — never commit these
+.env
+.env.local
+.env.production
+
+# TypeScript cache
+*.tsbuildinfo
+
+# logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# shared build output
+shared/dist/
+
+# migrations (keep the files, ignore nothing here)
+# — migration files SHOULD be committed, they're part of your codebase
