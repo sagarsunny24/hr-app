@@ -10,4 +10,4 @@ DB_NAME: z.string(),
 DB_PASSWORD:z.string(),
 }).parse(process.env)
 
-export const PORT = z.coerce.number(process.env.PORT)
+export const PORT = z.coerce.number().parse(process.env.PORT)

@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import { AppDataSource } from "./config/db.js";
 import { PORT } from "./config/env.js";
 async function bootstrap(){
