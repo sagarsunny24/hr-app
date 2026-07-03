@@ -38,7 +38,7 @@
 
     // paths
     "paths": { 
-      "@hr-app/shared": ["../shared/src/types.d.ts"],
+      "@hr-app/shared": ["../shared/src/types.ts"],
       "@hr-app/shared/*":["../shared/src/*"],
       "@/*": ["./src/*"] }
 
