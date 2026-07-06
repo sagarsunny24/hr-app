@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { LogStatus } from '@hr-app/shared'
 import { Employee } from "./Employee.js";
+import { Companies } from "./Companies.js";
 
 @Unique(["emp", "attendance_date"])
 @Check(`"status" IN ('present', 'absent', 'late','on_leave','half_day')`)
@@ -22,6 +23,10 @@ export class Attendance {
   @JoinColumn({ name: "emp_id",foreignKeyConstraintName:'fk_emp_attendance' })
   emp!: Employee;
 
+  @ManyToOne(()=>Companies, {onDelete:'CASCADE'})
+  @JoinColumn({name:'company_id',foreignKeyConstraintName:'fk_emp_company'})
+  company!:Companies
+  
   @Column({ type: "date" })
   attendance_date!: Date;
 

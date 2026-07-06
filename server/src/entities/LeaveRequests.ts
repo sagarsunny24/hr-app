@@ -8,11 +8,12 @@ import {
 } from "typeorm";
 import { Employee } from "./Employee.js";
 import { LeaveStatus, LeaveType } from '@hr-app/shared'
+import { Companies } from "./Companies.js";
 
 @Entity({ name: "leave_requests" })
 @Check(`"leave_type" IN ('paid', 'sick', 'casual')`)
 @Check(`"status" IN ('pending', 'approved', 'rejected')`)
-export default class LeaveRequests {
+export class LeaveRequests {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -37,4 +38,8 @@ export default class LeaveRequests {
   @ManyToOne(() => Employee, { nullable: true, onDelete: "SET NULL" })
   @JoinColumn({ name: "approved_by",foreignKeyConstraintName:'fk_leave_approved_by' })
   manager!: Employee | null;
+
+  @ManyToOne(()=> Companies,{ onDelete:'CASCADE'})
+  @JoinColumn({name:'company_id',foreignKeyConstraintName:'fk_leave_company'})
+  company!:Companies
 }

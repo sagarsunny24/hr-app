@@ -29,3 +29,13 @@ export enum LeaveType {
   SICK = 'sick',
   CASUAL = 'casual'
 }
+
+declare global {
+  namespace Express {
+    interface Request {
+      emp_id?: string,
+      emp_role?: EmpRole
+    }
+  }
+}
+export {}

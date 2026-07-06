@@ -9,6 +9,7 @@ import {
   Check,
 } from "typeorm";
 import { EmpRole, EmpStatus } from '@hr-app/shared'
+import { Companies } from "./Companies.js";
 
 @Entity({ name: "employee_details" })
 @Check(`"emp_role" IN ('manager', 'hr', 'employee')`)
@@ -47,6 +48,10 @@ export class Employee {
   @ManyToOne(() => Employee, { nullable: true, onDelete: "SET NULL" })
   @JoinColumn({ name: "emp_manager",foreignKeyConstraintName:'fk_manager' })
   emp_manager!: Employee | null;
+
+  @ManyToOne(()=>Companies)
+  @JoinColumn({name:'company_id',foreignKeyConstraintName:'fk_company'})
+  company!: Companies
 
   @CreateDateColumn({ type: "timestamptz" })
   created_at!: Date;
