@@ -6,16 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/index.ts",
-  "migration:generate": "tsx --env-file=.env node_modules/typeorm/cli.js migration:generate src/migrations/InitialSchema -d src/config/db.ts",
-"migration:run": "tsx --env-file=.env node_modules/typeorm/cli.js migration:run -d src/config/db.ts",
-"migration:revert": "tsx --env-file=.env node_modules/typeorm/cli.js migration:revert -d src/config/db.ts"
+    "migration:generate": "tsx --env-file=.env node_modules/typeorm/cli.js migration:generate src/migrations/InitialSchema -d src/config/db.ts",
+    "migration:run": "tsx --env-file=.env node_modules/typeorm/cli.js migration:run -d src/config/db.ts",
+    "migration:revert": "tsx --env-file=.env node_modules/typeorm/cli.js migration:revert -d src/config/db.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@hr-app/shared":"*",
+    "@hr-app/shared": "*",
+    "@types/cors": "^2.8.19",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
