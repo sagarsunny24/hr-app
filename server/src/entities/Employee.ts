@@ -46,7 +46,7 @@ export class Employee {
   profile_image_path!: string | null;
 
   @ManyToOne(() => Employee, { nullable: true, onDelete: "SET NULL" })
-  @JoinColumn({ name: "emp_manager",foreignKeyConstraintName:'fk_manager' })
+  @JoinColumn({ name: "emp_manager_id",foreignKeyConstraintName:'fk_manager' })
   emp_manager!: Employee | null;
 
   @ManyToOne(()=>Companies)

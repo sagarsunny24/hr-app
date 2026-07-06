@@ -2,6 +2,7 @@ import express from 'express'
 
 const router = express.Router();
 
+router.post('/register/company',registerCompany)
 router.post('/hr/register',registerHR)
 router.post('/hr/login',loginHR)
 router.post('/employee/register'.registerEmployee)
