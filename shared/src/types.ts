@@ -30,11 +30,17 @@ export enum LeaveType {
   CASUAL = 'casual'
 }
 
+export type LoginUserBody = {
+  email:string,
+  password:string
+}
+
 declare global {
   namespace Express {
     interface Request {
       emp_id?: string,
-      emp_role?: EmpRole
+      emp_role?: EmpRole,
+      company_id?: string,
     }
   }
 }
