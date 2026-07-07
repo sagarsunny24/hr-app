@@ -69,5 +69,8 @@ const registerCompany: RequestHandler = async (req, res, next) => {
   }
 };
 
+const loginUser:RequestHandler = async(req,res,next)=>{
+
+}
 
 export { registerCompany };
