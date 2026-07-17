@@ -5,10 +5,11 @@ import { Employee } from "@/entities/Employee.js";
 import { Users } from "@/entities/Users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { LoginUserBody } from "@hr-app/shared";
+import { LoginArgs, LoginUserBody, RegisterArgs } from "@hr-app/shared";
 import { envSchema } from "@/config/env.js";
+import { Response } from "express";
 
-const registerCompany: RequestHandler = async (req, res, next) => {
+const registerCompany = async (args:RegisterArgs) => {
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -28,8 +29,7 @@ const registerCompany: RequestHandler = async (req, res, next) => {
       created_date,
       company_address,
       password,
-    } = req.body;
-
+    } = args.input
     const companyRepo = queryRunner.manager.getRepository(Companies);
     const employeeRepo = queryRunner.manager.getRepository(Employee);
     const userRepo = queryRunner.manager.getRepository(Users);
@@ -60,18 +60,17 @@ const registerCompany: RequestHandler = async (req, res, next) => {
     });
     await queryRunner.commitTransaction();
 
-    res.status(201).json({ message: "Company successfully created" });
+    return { message: "Company successfully created" };
   } catch (err) {
     await queryRunner.rollbackTransaction();
-    next(err);
   } finally {
     await queryRunner.release();
   }
 };
 
-const loginUser: RequestHandler = async (req, res, next) => {
+const loginUser= async (args:LoginArgs,res:Response) => {
   try {
-    const { email, password }: LoginUserBody = req.body;
+    const { email, password }: LoginUserBody = args.input
     const userRepo = AppDataSource.getRepository(Users);
     const employeeRepo = AppDataSource.getRepository(Employee);
     const user = await userRepo.findOne({
@@ -83,11 +82,11 @@ const loginUser: RequestHandler = async (req, res, next) => {
       },
     });
     if (!user) {
-      return next({ status: 404, message: "User not found" });
+      throw new Error("User not found");
     } else {
       const match = await bcrypt.compare(password, user.password_hash);
       if (!match) {
-        return next({ status: 401, message: "Unauthorized" });
+        throw new Error("Unauthorized" );
       } else {
         const employee = await employeeRepo.findOne({
           where: {
@@ -99,7 +98,7 @@ const loginUser: RequestHandler = async (req, res, next) => {
           },
         });
         if (!employee) {
-          return next({ status: 404, message: "Employee does not exist" });
+          throw new Error("Employee does not exist" );
         }
         const payload = {
           emp_id: employee.emp_id,
@@ -121,14 +120,12 @@ const loginUser: RequestHandler = async (req, res, next) => {
           secure: false,
           maxAge: 604800000,
         });
-        res
-          .status(200)
-          .json({ accessToken: accessToken, role: employee.emp_role });
+        return { accessToken: accessToken, role: employee.emp_role };
         
       }
     }
   } catch (err) {
-    next(err);
+    return err
   }
 };
 

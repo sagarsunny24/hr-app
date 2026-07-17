@@ -1,3 +1,5 @@
+import type { Request, Response } from "express";
+
 export enum EmpRole {
   MANAGER = 'manager',
   HR = 'hr',
@@ -38,10 +40,54 @@ export type LoginUserBody = {
 declare global {
   namespace Express {
     interface Request {
-      emp_id?: string,
-      emp_role?: EmpRole,
-      company_id?: string,
+      user: {
+         emp_id?: string | null,
+      emp_role?: EmpRole | null,
+      company_id?: string | null
+
+      } | null,
+     
     }
   }
 }
+
+export interface LoginArgs {
+  input:LoginUserBody,
+}
+
+interface RegisterCredentials {
+  // Employee
+  emp_name: string;
+  emp_email: string;
+  emp_phone: string;
+  emp_dept: string;
+  emp_role: EmpRole;
+  emp_joining_date: Date;
+  emp_status: EmpStatus;
+
+  // Company
+  company_name: string;
+  registration_no: string;
+  ceo_name: string;
+  company_loc: string;
+  created_date: Date;
+  company_address: string;
+
+  // User
+  password: string;
+}
+export interface RegisterArgs {
+  input:RegisterCredentials
+}
+
+export interface AuthPayload {
+  emp_id: string;
+  emp_role: EmpRole;
+  company_id: string;
+}
+export interface Context {
+  req: Request;
+  res: Response;
+}
+
 export {}
