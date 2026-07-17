@@ -12,8 +12,9 @@ export const resolvers = {
       return loginUser(args,res)
 
     },
-    registerCompany: async(_parents:unknown,args:RegisterArgs,context:unknown) =>{
+    register: async(_parents:unknown,args:RegisterArgs,context:unknown) =>{
       const registerResponse = await registerCompany(args)
+      return registerResponse;
      
     }
   }

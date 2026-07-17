@@ -63,6 +63,7 @@ const registerCompany = async (args:RegisterArgs) => {
     return { message: "Company successfully created" };
   } catch (err) {
     await queryRunner.rollbackTransaction();
+    return err
   } finally {
     await queryRunner.release();
   }

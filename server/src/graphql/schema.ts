@@ -1,6 +1,9 @@
 import { types } from "node:ffi"
 
 export const typeDefs = `
+type Query {
+_empty:String
+}
 input LoginCredentials {
   email: String!
   password:String!
@@ -33,6 +36,6 @@ input RegisterDetails {
 }
 type Mutation {
   login(input:LoginCredentials!): LoginResponse!
-  registerCompany(input:RegisterDetails!):RegisterResponse!
+  register(input:RegisterDetails!):RegisterResponse!
 }
   `
