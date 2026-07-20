@@ -1,4 +1,4 @@
-import { types } from "node:ffi"
+
 
 export const typeDefs = `
 type Query {
@@ -37,5 +37,27 @@ input RegisterDetails {
 type Mutation {
   login(input:LoginCredentials!): LoginResponse!
   register(input:RegisterDetails!):RegisterResponse!
+  addEmployee(input:EmployeeDetails!):Response
 }
-  `
+type Response {
+message:String!
+}
+
+input EmployeeDetails {
+  emp_name: String!
+  emp_email: String!
+  emp_phone: String!
+  emp_dept: String!
+  emp_role: String!
+  emp_joining_date: String!
+  emp_status: String!
+  emp_address: String!
+  emp_manager_id:String
+  profile_image_path:String
+  company_id:String!
+}
+
+
+
+
+`

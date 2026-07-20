@@ -88,6 +88,7 @@ export interface AuthPayload {
 export interface Context {
   req: Request;
   res: Response;
+  user: AuthPayload | null
 }
 export interface LoginResponse {
   accessToken:string,
@@ -110,5 +111,18 @@ export type LoginMutationResponse = {
   login: LoginResponse
 };
 
+export type EmployeeDetails = {
+  emp_name: string;
+  emp_email: string;
+  emp_phone: string;
+  emp_dept: string;
+  emp_role: EmpRole;
+  emp_joining_date: Date;
+  emp_status: EmpStatus;
+  emp_address: string;
+   profile_image_path: string;
+emp_manager_id:string;
+
+}
 
 export {}

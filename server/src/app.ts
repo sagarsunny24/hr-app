@@ -20,7 +20,7 @@ app.use(httpLogger)
 app.use(cookieParser())
 app.use('/graphql',expressMiddleware(server,{
   context: async({req,res}):Promise<Context> => {
-    req.user = null;
+    let user = null
     const authHeader = req.headers['authorization']
     if(authHeader?.startsWith('Bearer ')){
       
@@ -28,17 +28,16 @@ app.use('/graphql',expressMiddleware(server,{
       const token = authHeader.split(" ")[1]
       try{
  if(typeof token === 'string'){
- const user = verifyJWT(token)
-      req.user = user
+      user = verifyJWT(token)
       }
       } catch{
-        req.user = null
+        user = null
       }
      
      
     }
 
-   return {req,res}
+   return {req,res,user}
   }
 })
 
