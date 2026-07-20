@@ -1,11 +1,38 @@
-import { Card, Box, Typography, TextField ,Button} from "@mui/material";
+import { Card, Box, Typography, TextField, Button } from "@mui/material";
 import auth from "../assets/auth.webp";
 import MyLogo from "../assets/HR-logo.webp";
 import { useState } from "react";
+import { useMutation } from "@apollo/client/react";
+import { LOGIN_MUTATION } from "../graphql/mutations/authMutations";
+import { useAppDispatch } from "../store/hooks";
+import { loginThunk } from "../store/thunks/loginThunk";
+import { toast } from "react-toastify";
 export default function LoginPage() {
   console.log(auth);
-  const [email,setEmail] = useState<string>('')
-  const [password,setPassword] = useState<string>('')
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const dispatch = useAppDispatch();
+  const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted: (data) => {
+      dispatch(loginThunk(data?.login));
+    },
+    onError: (err) => {
+      toast.error(err.message);
+      console.log(err.message);
+    },
+  });
+
+  const handleLogin = async () => {
+    await loginMutation({
+      variables: {
+        input: {
+          email,
+          password,
+        },
+      },
+    });
+  };
   return (
     <Box
       sx={{
@@ -38,18 +65,25 @@ export default function LoginPage() {
             <Typography>Welcome to Humanly</Typography>
             <Typography>Sign in to access your employee profile</Typography>
           </Box>
-          <Box sx={{display:'flex',flexDirection:'column',gap:2}}>
-          <TextField
-          label='Enter your email'
-          value={email}
-          onChange={(e)=>setEmail(e.target.value)}></TextField>
-           <TextField
-           label='Enter your password'
-          value={password}
-          onChange={(e)=>setPassword(e.target.value)}></TextField>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              label="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            ></TextField>
+            <TextField
+              label="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            ></TextField>
           </Box>
-          <Button>Login</Button>
-          <Button>Register</Button>
+          {!loading && (
+            <Button variant="contained" onClick={handleLogin}>
+              Login
+            </Button>
+          )}
+
+          {/* <Button variant="contained">Register</Button> */}
         </Box>
       </Card>
     </Box>

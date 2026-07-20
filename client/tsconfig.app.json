@@ -19,7 +19,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+     "paths": { 
+      "@hr-app/shared": ["../shared/src/types.ts"],
+      "@hr-app/shared/*":["../shared/src/*"],
+      "@/*": ["./src/*"] }
+
   },
   "include": ["src"]
 }

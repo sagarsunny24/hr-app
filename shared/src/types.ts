@@ -89,5 +89,26 @@ export interface Context {
   req: Request;
   res: Response;
 }
+export interface LoginResponse {
+  accessToken:string,
+  role:EmpRole
+}
+export interface ErrorResponse {
+  message:string
+}
+
+export interface AuthInitialState {
+   status:'idle' | 'loading' | 'succeeded' |'failed',
+  user:{
+accessToken:string | null,
+  role:EmpRole,
+  isAuthenticated:boolean
+  },
+  error:{message:string} | null
+}
+export type LoginMutationResponse = {
+  login: LoginResponse
+};
+
 
 export {}

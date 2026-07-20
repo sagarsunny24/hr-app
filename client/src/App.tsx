@@ -1,26 +1,30 @@
 import { darkTheme,lightTheme } from "./theme/theme"
-import { ThemeProvider, type Theme } from "@mui/material"
+import { ThemeProvider } from "@mui/material"
 
-import LoginPage from "./pages/LoginPage"
+// import LoginPage from "./pages/LoginPage"
+import { RouterProvider } from "react-router"
+import router from "./router"
 import { useEffect, useState } from "react"
-
+import {ToastContainer} from 'react-toastify'
 export default function App() {
-  const [windowTheme, setWindowTheme] = useState(()=>{
-    const savedTheme = localStorage.getItem('theme')
-    return savedTheme? JSON.parse(savedTheme) : lightTheme
-  })
-  useEffect(()=>{
-    localStorage.setItem('theme',JSON.stringify(windowTheme))
-  },[windowTheme])
+  const [mode, setMode] = useState<"light" | "dark">(() => {
+  return localStorage.getItem("theme") === "dark" ? "dark" : "light";
+});
 
-  function toggleTheme (){
-   setWindowTheme((prev:Theme) => {
-    return prev === lightTheme ? darkTheme : lightTheme;
-  });
-  }
+useEffect(() => {
+  localStorage.setItem("theme", mode);
+}, [mode]);
+
+const theme = mode === "light" ? lightTheme : darkTheme;
+
+function toggleTheme() {
+  setMode((prev) => (prev === "light" ? "dark" : "light"));
+}
+
   return (
-    <ThemeProvider theme={windowTheme}>
-  <LoginPage />
+    <ThemeProvider theme={theme}>
+      <ToastContainer />
+      <RouterProvider router={router}/>
     </ThemeProvider>
   
   )
