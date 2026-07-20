@@ -7,15 +7,17 @@ import { LOGIN_MUTATION } from "../graphql/mutations/authMutations";
 import { useAppDispatch } from "../store/hooks";
 import { loginThunk } from "../store/thunks/loginThunk";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 export default function LoginPage() {
   console.log(auth);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
+  const navigate = useNavigate()
   const dispatch = useAppDispatch();
   const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
       dispatch(loginThunk(data?.login));
+      navigate('/home')
     },
     onError: (err) => {
       toast.error(err.message);
