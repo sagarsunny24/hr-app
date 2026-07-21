@@ -16,10 +16,13 @@ emp_name: String!
   }
 
   input EmployeeFilter {
+  limit:Int = 10
+  offset:Int = 0
     emp_dept: String
     emp_role:String
-    emp_joining_date:String!
-    emp_status:String!
+    emp_designation:String
+    emp_joining_date:String
+    emp_status:String
   
   }
 type Query {

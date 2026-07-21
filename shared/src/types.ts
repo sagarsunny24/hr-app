@@ -127,4 +127,18 @@ emp_manager_id:string;
 
 }
 export type CompanyID =string;
+
+
+export type ViewAllFilter = {
+ filter:{
+   limit:number;
+  offset: number;
+  emp_dept?:string
+  emp_role?:string;
+  emp_designation?:string;
+  emp_joining_date?:string;
+  emp_status?:String
+ }
+}
+
 export {}

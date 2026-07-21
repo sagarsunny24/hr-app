@@ -7,6 +7,7 @@ import {
   Context,
   EmpRole,
   CompanyID,
+  ViewAllFilter,
 } from "@hr-app/shared";
 import type { Response } from "express";
 import { GraphQLError } from "graphql";
@@ -16,14 +17,14 @@ export const resolvers = {
   Query: {
     viewAll:async(
       _parents:unknown,
-      args:unknown,
+      {filter}:ViewAllFilter,
       context:Context
     ) =>{
       if(!context.user)  throw new GraphQLError("Unauthorized", {
           extensions: { code: "FORBIDDEN" },
         });
         
-        return await viewAllEmployees(context.user.company_id)
+        return await viewAllEmployees(context.user.company_id,{filter})
 
     }
   },
