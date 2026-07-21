@@ -36,7 +36,7 @@ app.use('/graphql',expressMiddleware(server,{
      
      
     }
-
+    console.log(user)
    return {req,res,user}
   }
 })

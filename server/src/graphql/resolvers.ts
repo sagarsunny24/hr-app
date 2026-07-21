@@ -6,20 +6,34 @@ import {
   EmployeeDetails,
   Context,
   EmpRole,
+  CompanyID,
 } from "@hr-app/shared";
 import type { Response } from "express";
 import { GraphQLError } from "graphql";
-import { createNewEmp } from "@/controllers/employee.controller.js";
+import { createNewEmp, viewAllEmployees } from "@/controllers/employee.controller.js";
 
 export const resolvers = {
-  Query: {},
+  Query: {
+    viewAll:async(
+      _parents:unknown,
+      args:unknown,
+      context:Context
+    ) =>{
+      if(!context.user)  throw new GraphQLError("Unauthorized", {
+          extensions: { code: "FORBIDDEN" },
+        });
+        
+        return await viewAllEmployees(context.user.company_id)
+
+    }
+  },
   Mutation: {
     login: async (
       _parents: unknown,
       args: LoginArgs,
       { res }: { res: Response },
     ) => {
-      return loginUser(args, res);
+      return await loginUser(args, res);
     },
     register: async (
       _parents: unknown,
@@ -30,7 +44,7 @@ export const resolvers = {
       return registerResponse;
     },
     addEmployee: async (_:unknown, args:{input:EmployeeDetails} , context: Context) => {
-      if (!context.user || context.user.emp_role !== EmpRole.HR) {
+      if (!context.user || context.user.emp_role !== EmpRole.MANAGER) {
         throw new GraphQLError("Unauthorized", {
           extensions: { code: "FORBIDDEN" },
         });

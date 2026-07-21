@@ -4,9 +4,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loginThunk = createAsyncThunk(
   'auth/login',
-  async(loginRespone:LoginResponse,{rejectWithValue}) => {
+  async(loginResponse:LoginResponse,{rejectWithValue}) => {
     try{
-      const {accessToken,role} = loginRespone;
+      const {accessToken,role} = loginResponse;
       const user = {
         accessToken,
         role,

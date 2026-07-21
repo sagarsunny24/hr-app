@@ -1,9 +1,33 @@
-
-
 export const typeDefs = `
-type Query {
-_empty:String
+enum EmpStatus {
+ACTIVE
+PROBATION
+INACTIVE
 }
+type EmployeeResponse{
+emp_id: String!
+emp_name: String!
+  emp_email: String!
+  emp_phone: String!
+  emp_dept: String!
+  emp_role: String!
+  emp_joining_date: String!
+  emp_status: String!
+  }
+
+  input EmployeeFilter {
+    emp_dept: String
+    emp_role:String
+    emp_joining_date:String!
+    emp_status:String!
+  
+  }
+type Query {
+viewAll(filter: EmployeeFilter): [EmployeeResponse]
+}
+
+
+
 input LoginCredentials {
   email: String!
   password:String!
@@ -22,8 +46,9 @@ input RegisterDetails {
   emp_phone: String!
   emp_dept: String!
   emp_role: String!
+  emp_designation:String!
   emp_joining_date: String!
-  emp_status: String!
+  emp_status: EmpStatus!
 
   company_name: String!
   registration_no: String!
@@ -49,6 +74,7 @@ input EmployeeDetails {
   emp_phone: String!
   emp_dept: String!
   emp_role: String!
+  emp_designation: String!
   emp_joining_date: String!
   emp_status: String!
   emp_address: String!
@@ -60,4 +86,4 @@ input EmployeeDetails {
 
 
 
-`
+`;

@@ -62,6 +62,7 @@ interface RegisterCredentials {
   emp_phone: string;
   emp_dept: string;
   emp_role: EmpRole;
+  emp_designation:string;
   emp_joining_date: Date;
   emp_status: EmpStatus;
 
@@ -117,6 +118,7 @@ export type EmployeeDetails = {
   emp_phone: string;
   emp_dept: string;
   emp_role: EmpRole;
+  emp_designation: string;
   emp_joining_date: Date;
   emp_status: EmpStatus;
   emp_address: string;
@@ -124,5 +126,5 @@ export type EmployeeDetails = {
 emp_manager_id:string;
 
 }
-
+export type CompanyID =string;
 export {}

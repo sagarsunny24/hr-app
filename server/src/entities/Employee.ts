@@ -12,8 +12,14 @@ import { EmpRole, EmpStatus } from '@hr-app/shared'
 import { Companies } from "./Companies.js";
 
 @Entity({ name: "employee_details" })
-@Check(`"emp_role" IN ('manager', 'hr', 'employee')`)
-@Check(`"emp_status" IN ('active','probation', 'inactive')`)
+@Check(
+  "CHK_EMP_ROLE",
+  `"emp_role" IN ('manager', 'hr', 'employee')`
+)
+@Check(
+  "CHK_EMP_STATUS",
+  `"emp_status" IN ('active', 'probation', 'inactive')`
+)
 export class Employee {
   @PrimaryGeneratedColumn("uuid")
   emp_id!: string;
@@ -32,6 +38,9 @@ export class Employee {
 
   @Column({ type: "text" })
   emp_role!: EmpRole;
+
+  @Column({type: 'text', nullable:true,default:'Staff'})
+  emp_designation!: string | null
 
   @Column({ type: "date" })
   emp_joining_date!: Date;
