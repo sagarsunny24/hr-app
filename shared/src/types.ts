@@ -141,7 +141,8 @@ export type ViewAllFilter = {
  }
 }
 export interface ViewAllResponse {
-   emp_name: string;
+  viewAll:{
+      emp_name: string;
   emp_email: string;
   emp_phone: string;
   emp_dept: string;
@@ -150,6 +151,8 @@ export interface ViewAllResponse {
   emp_joining_date: Date;
   emp_status: EmpStatus;
   profile_image_path: string;
+  }
+ 
 }
 
 export {}

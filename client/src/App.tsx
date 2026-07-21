@@ -7,7 +7,17 @@ import router from "./router"
 import { useEffect} from "react"
 import { useAppSelector } from "./store/hooks"
 import {ToastContainer} from 'react-toastify'
+import { QueryClient } from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
 export default function App() {
+  const queryClient = new QueryClient({
+    defaultOptions:{
+      queries:{
+        refetchOnWindowFocus:false,
+      staleTime: 1000 * 60 * 5,
+      }
+    }
+  })
   const mode = useAppSelector((state) => state.theme.theme)
   const theme = mode === 'light'? lightTheme : darkTheme
   useEffect(()=>{
@@ -16,7 +26,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <ToastContainer />
+      <QueryClientProvider client={queryClient}>
       <RouterProvider router={router}/>
+      </QueryClientProvider>
     </ThemeProvider>
   
   )
