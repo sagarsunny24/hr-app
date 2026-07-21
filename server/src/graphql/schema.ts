@@ -13,6 +13,8 @@ emp_name: String!
   emp_role: String!
   emp_joining_date: String!
   emp_status: String!
+  emp_designation: String!
+  profile_image_path: String!
   }
 
   input EmployeeFilter {
