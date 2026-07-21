@@ -14,7 +14,7 @@ emp_name: String!
   emp_joining_date: String!
   emp_status: String!
   emp_designation: String!
-  profile_image_path: String!
+  profile_image_path: String
   }
 
   input EmployeeFilter {
