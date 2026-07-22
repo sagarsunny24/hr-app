@@ -131,8 +131,8 @@ export type CompanyID =string;
 
 export type ViewAllFilter = {
  filter:{
-   limit:number;
-  offset: number;
+   limit?:number;
+  offset?: number;
   emp_dept?:string
   emp_role?:string;
   emp_designation?:string;
@@ -142,7 +142,7 @@ export type ViewAllFilter = {
 }
 export interface ViewAllResponse {
   viewAll:{
-      emp_name: string;
+  emp_name: string;
   emp_email: string;
   emp_phone: string;
   emp_dept: string;
@@ -154,5 +154,19 @@ export interface ViewAllResponse {
   }
  
 }
-
+export interface MngrDetailsRes {
+  viewAll:{
+emp_id:string,
+  emp_name:string,
+  profile_image_path: string | null
+  }
+  
+}
+export interface MngrDetails {
+  
+emp_id:string,
+  emp_name:string,
+  profile_image_path: string | null
+  
+}
 export {}

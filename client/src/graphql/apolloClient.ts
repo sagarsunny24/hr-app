@@ -1,4 +1,4 @@
-import { useAppSelector } from "../store/hooks";
+import store from "../store/store";
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 
 import { SetContextLink } from "@apollo/client/link/context";
@@ -8,7 +8,8 @@ const httpLink = new HttpLink({
 
 
 const authLink = new SetContextLink((prevContext) => {
-  const token = useAppSelector((state)=>state.auth.user.accessToken)
+  const token = store.getState().auth.user.accessToken
+  console.log("token",token)
   return {
     headers: {
       ...prevContext.headers,

@@ -1,5 +1,5 @@
 // import React from 'react'
-import { useViewAll } from "../hooks/useViewAll"
+import useViewAll  from "../hooks/useViewAll"
 import TopBar from "../components/dashboard/TopBar"
 import { Box } from "@mui/material"
 export default function Dashboard() {
@@ -8,7 +8,7 @@ export default function Dashboard() {
   return (
     <Box> 
       <TopBar />
-      {employees}
+      {/* {employees} */}
     </Box>
   )
 }
