@@ -85,7 +85,6 @@ input EmployeeDetails {
   emp_address: String!
   emp_manager_id:String
   profile_image_path:String
-  company_id:String!
 }
 
 
