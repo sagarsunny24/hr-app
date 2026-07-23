@@ -15,18 +15,32 @@ import { openForm } from "../../store/slices/formSlice";
 import type { MngrDetails } from "@hr-app/shared";
 import useAddEmployee from "../../hooks/useAddEmployee";
 import useManagerDetails from "../../hooks/useManagerDetails";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { uploadImage } from "../../supabase/uploadImage";
 export default function EmployeeForm() {
   const [managers, setManagers] = useState<MngrDetails[]>();
+  const [profileImg,setProfileImg] = useState<File | null>(null)
+   const publicUrl = useRef<string |null>(null);
   const dispatch = useAppDispatch();
   const addNewEmployee = useAddEmployee()
   const { fetchManagers } = useManagerDetails();
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>){
+    if (!e.target.files || e.target.files.length === 0) {
+    return;
+  }
+      setProfileImg(e.target.files[0]);
+  }
  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     console.log(data);
-    const input = {...data,profile_image_path:null}
+    if(profileImg){
+    publicUrl.current = await uploadImage(profileImg)
+    }
+    console.log(publicUrl.current)
+    const input = {...data,profile_image_path:publicUrl.current}
     console.log("input:",input)
    await addNewEmployee({input})
   }
@@ -155,6 +169,13 @@ export default function EmployeeForm() {
             ))}
           </Select>
         </FormControl>
+        <Box>
+          <Button>Upload Image
+ <input type="file" name="profile_image_path" onChange={handleImageChange}  />
+
+          </Button>
+         
+        </Box>
       </Box>
       <Box>
         <Button type="submit" variant="contained" size="large">

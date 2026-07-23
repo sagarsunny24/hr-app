@@ -122,7 +122,7 @@ export type EmployeeDetails = {
   emp_joining_date: Date;
   emp_status: EmpStatus;
   emp_address: string;
-   profile_image_path: string;
+profile_image_path: string | null;
 emp_manager_id:string;
 
 }
