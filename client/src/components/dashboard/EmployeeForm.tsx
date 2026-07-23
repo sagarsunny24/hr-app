@@ -19,19 +19,20 @@ import { useState } from "react";
 export default function EmployeeForm() {
   const [managers, setManagers] = useState<MngrDetails[]>();
   const dispatch = useAppDispatch();
-  // const addNewEmployee = useAddEmployee()
+  const addNewEmployee = useAddEmployee()
   const { fetchManagers } = useManagerDetails();
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+ async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     console.log(data);
-    // console.log(dept)
-    // addNewEmployee({input:data})
+    const input = {...data,profile_image_path:null}
+    console.log("input:",input)
+   await addNewEmployee({input})
   }
   async function fetchOnChange(e: SelectChangeEvent) {
     const emp_dept = e.target.value;
-    const data: MngrDetails[] = await fetchManagers({ filter: { emp_dept,emp_role:'manager' } }) ?? [];
+    const data: MngrDetails[]= await fetchManagers({ filter: { emp_dept,emp_role:'manager' } }) ?? [];
     console.log(data)
     if (data) setManagers(data?? []);
   }
@@ -79,9 +80,25 @@ export default function EmployeeForm() {
           >
             <MenuItem value="frontend">Frontend</MenuItem>
             <MenuItem value="backend">Backend</MenuItem>
-            <MenuItem value="hr">HR</MenuItem>
+            <MenuItem value="hr">Human Resources</MenuItem>
             <MenuItem value="xecutive">Executive</MenuItem>
             <MenuItem value="Engineering">Engineering</MenuItem>
+          </Select>
+        </FormControl>
+         <FormControl fullWidth>
+          <InputLabel id="emp_role"></InputLabel>
+          <Select
+            name="emp_role"
+            required
+            fullWidth
+            label="Employee Type"
+            labelId="emp_role"
+            sx={{ mb: 2 }}
+          >
+            <MenuItem value="hr">HR</MenuItem>
+            <MenuItem value="manager">Manager</MenuItem>
+            <MenuItem value="employee">Employee</MenuItem>
+  
           </Select>
         </FormControl>
         <TextField
@@ -93,7 +110,7 @@ export default function EmployeeForm() {
         />
         <TextField
           label="Joining Date"
-          name="joining_date"
+          name="emp_joining_date"
           variant="outlined"
           type="date"
         />

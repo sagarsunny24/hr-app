@@ -2,11 +2,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import type {  ViewAllFilter } from "@hr-app/shared";
 import { apolloClient } from "../graphql/apolloClient";
 import { FETCH_MNGR_QUERY } from "../graphql/queries/fetchManagerQuery";
+import type { MngrDetails } from "@hr-app/shared";
 
 
 export default function useManagerDetails(){
   const queryClient = useQueryClient();
-  const fetchManagers = (filter:ViewAllFilter)=>queryClient.fetchQuery({
+  const fetchManagers = (filter:ViewAllFilter): Promise<MngrDetails[]>=>queryClient.fetchQuery({
     queryKey:["manager-list",filter],
     queryFn:async()=>{
       const {data,error} = await apolloClient.query({
@@ -16,7 +17,7 @@ export default function useManagerDetails(){
       if(error){
         throw new Error(error.message)
       }
-      return data?.viewAll
+      return data?.viewAll ?? []
     }
   });
   return {fetchManagers}
