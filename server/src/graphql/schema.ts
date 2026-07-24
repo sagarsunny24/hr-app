@@ -71,6 +71,8 @@ type Mutation {
 }
 type Response {
 message:String!
+email:String!
+temp_pswrd:String!
 }
 
 input EmployeeDetails {

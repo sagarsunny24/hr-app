@@ -19,5 +19,5 @@ export class Users {
 
   @Column({type: "varchar",
     nullable: true})
-  refresh_token!: string
+  refresh_token!: string | null
 }

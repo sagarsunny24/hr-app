@@ -2,7 +2,8 @@ import type { EmployeeDetails, ViewAllFilter } from "@hr-app/shared";
 import { AppDataSource } from "@/config/db.js";
 import { Employee } from "@/entities/Employee.js";
 import { Companies } from "@/entities/Companies.js";
-
+import { Users } from "@/entities/Users.js";
+import bcrypt from 'bcrypt'
 type CreateArgs = {
   input: EmployeeDetails;
   company_id: string;
@@ -26,8 +27,8 @@ const createNewEmp = async (args: CreateArgs) => {
   const employeeRepo = AppDataSource.getRepository(Employee);
   let manager: Employee | null = null;
   const companyRepo = AppDataSource.getRepository(Companies);
-  let company = await companyRepo.findOneBy({ company_id: company_id });
-
+  const company = await companyRepo.findOneBy({ company_id: company_id });
+  const  usersRepo = await AppDataSource.getRepository(Users)
   if (!company) {
     throw new Error(`Company with id: ${company_id} not found`);
   }
@@ -55,7 +56,16 @@ const createNewEmp = async (args: CreateArgs) => {
     });
 
     await employeeRepo.save(newEmployee);
-    return { message: "Employee created successfully" };
+    const temp_password = emp_name.slice(3) + emp_email.slice(4) + Math.floor(1000 + Math.random() * 9000);
+    const password_hash = await bcrypt.hash(temp_password, 10);
+    const newUser = usersRepo.create({
+      email:emp_email,
+      user:newEmployee,
+      password_hash,
+      refresh_token:null,
+    })
+    await usersRepo.save(newUser)
+    return { message: "Employee created successfully",email:emp_email,temp_pswrd:temp_password };
   } catch (err) {
     throw new Error(`Failed to create employee: ${(err as Error).message}`);
   }
