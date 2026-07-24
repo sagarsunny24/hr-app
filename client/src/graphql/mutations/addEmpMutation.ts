@@ -6,6 +6,8 @@ export const ADDEMP_MUTATION:TypedDocumentNode<{message:string},{input:EmployeeD
 mutation Mutation($input: EmployeeDetails!) {
   addEmployee(input: $input) {
     message
+    email
+    temp_pswrd
   }
 }
 `
