@@ -155,11 +155,7 @@ export interface ViewAllResponse {
  
 }
 export interface MngrDetailsRes {
-  viewAll:{
-emp_id:string,
-  emp_name:string,
-  profile_image_path: string | null
-  }
+  viewAll:MngrDetails
   
 }
 export interface MngrDetails {
