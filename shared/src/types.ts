@@ -123,7 +123,7 @@ export type EmployeeDetails = {
   emp_status: EmpStatus;
   emp_address: string;
 profile_image_path: string | null;
-emp_manager_id:string;
+emp_manager_id:string | null;
 
 }
 export type CompanyID =string;
@@ -148,10 +148,10 @@ export interface ViewAllResponse {
   emp_dept: string;
   emp_role: EmpRole;
   emp_designation: string;
-  emp_joining_date: Date;
+  emp_joining_date: string;
   emp_status: EmpStatus;
   profile_image_path: string;
-  }
+  }[]
  
 }
 export interface MngrDetailsRes {

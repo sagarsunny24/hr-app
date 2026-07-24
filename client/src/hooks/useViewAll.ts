@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { VIEWALL_QUERY } from '../graphql/queries/viewEmployees';
 import { apolloClient } from '../graphql/apolloClient';
-import {  type ViewAllFilter } from '@hr-app/shared';
+import {  type ViewAllFilter} from '@hr-app/shared';
 
 
 export default function useViewAll(filter:ViewAllFilter){
   return useQuery({
-    queryKey:["viewAll",filter],
+    queryKey:["viewAll"],
     queryFn:async()=>{
       const {data,error}= await apolloClient.query({
         query:VIEWALL_QUERY,

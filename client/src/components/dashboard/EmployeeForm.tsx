@@ -9,46 +9,83 @@ import {
   Typography,
   type SelectChangeEvent,
 } from "@mui/material";
-
+import {toast,Bounce} from 'react-toastify'
 import { useAppDispatch } from "../../store/hooks";
 import { openForm } from "../../store/slices/formSlice";
-import type { MngrDetails } from "@hr-app/shared";
+import type { EmployeeDetails, MngrDetails } from "@hr-app/shared";
 import useAddEmployee from "../../hooks/useAddEmployee";
 import useManagerDetails from "../../hooks/useManagerDetails";
 import { useRef, useState } from "react";
 import { uploadImage } from "../../supabase/uploadImage";
 export default function EmployeeForm() {
   const [managers, setManagers] = useState<MngrDetails[]>();
-  const [profileImg,setProfileImg] = useState<File | null>(null)
-   const publicUrl = useRef<string |null>(null);
+  const [profileImg, setProfileImg] = useState<File | null>(null);
+  const publicUrl = useRef<string | null>(null);
   const dispatch = useAppDispatch();
-  const addNewEmployee = useAddEmployee()
+  const addNewEmployee = useAddEmployee();
   const { fetchManagers } = useManagerDetails();
 
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>){
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) {
-    return;
+      return;
+    }
+    setProfileImg(e.target.files[0]);
   }
-      setProfileImg(e.target.files[0]);
-  }
- async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    try{
+  const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     console.log(data);
-    if(profileImg){
-    publicUrl.current = await uploadImage(profileImg)
+    if (profileImg) {
+      publicUrl.current = await uploadImage(profileImg);
     }
-    console.log(publicUrl.current)
-    const input = {...data,profile_image_path:publicUrl.current}
-    console.log("input:",input)
-   await addNewEmployee({input})
+    const manager = data.emp_manager_id === ""? null : data.emp_manager_id
+    console.log(publicUrl.current);
+    const input = {
+      ...data,
+      emp_manager_id:manager,
+      profile_image_path: publicUrl.current,
+    } as EmployeeDetails;
+    console.log("input:", input);
+    const res = await addNewEmployee({ input });
+    if(res.message) {
+      toast.success(res.message,{
+position: "top-right",
+autoClose: 5000,
+hideProgressBar: false,
+closeOnClick: false,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Bounce,
+      })
+      
+    }
+    dispatch(openForm(false))
+    }catch(err){
+      toast.error(`Error ${err} occured`, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+    }
+    
   }
   async function fetchOnChange(e: SelectChangeEvent) {
     const emp_dept = e.target.value;
-    const data: MngrDetails[]= await fetchManagers({ filter: { emp_dept,emp_role:'manager' } }) ?? [];
-    console.log(data)
-    if (data) setManagers(data?? []);
+    const data: MngrDetails[] =
+      (await fetchManagers({ filter: { emp_dept, emp_role: "manager" } })) ??
+      [];
+    console.log(data);
+    if (data) setManagers(data ?? []);
   }
   return (
     <Box component="form" onSubmit={handleSubmit}>
@@ -99,7 +136,7 @@ export default function EmployeeForm() {
             <MenuItem value="Engineering">Engineering</MenuItem>
           </Select>
         </FormControl>
-         <FormControl fullWidth>
+        <FormControl fullWidth>
           <InputLabel id="emp_role"></InputLabel>
           <Select
             name="emp_role"
@@ -112,7 +149,6 @@ export default function EmployeeForm() {
             <MenuItem value="hr">HR</MenuItem>
             <MenuItem value="manager">Manager</MenuItem>
             <MenuItem value="employee">Employee</MenuItem>
-  
           </Select>
         </FormControl>
         <TextField
@@ -157,11 +193,9 @@ export default function EmployeeForm() {
             name="emp_manager_id"
             labelId="emp-manager-label"
             label="Manager"
-            required
             fullWidth
-            
             sx={{ mb: 2 }}
-          >
+          ><MenuItem key={"empty"} value={""}>No Manager</MenuItem>
             {managers?.map((manager) => (
               <MenuItem key={manager.emp_id} value={manager.emp_id}>
                 {manager.emp_name}
@@ -170,11 +204,14 @@ export default function EmployeeForm() {
           </Select>
         </FormControl>
         <Box>
-          <Button>Upload Image
- <input type="file" name="profile_image_path" onChange={handleImageChange}  />
-
+          <Button>
+            Upload Image
+            <input
+              type="file"
+              name="profile_image_path"
+              onChange={handleImageChange}
+            />
           </Button>
-         
         </Box>
       </Box>
       <Box>
