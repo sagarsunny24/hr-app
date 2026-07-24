@@ -23,7 +23,7 @@ accessToken:string | null,
   role:Role,
   isAuthenticated:boolean
   },
-  permision:Permission
+  permission:Permission
 ){
-  return (ROLES[user.role] as readonly Permission[]).includes(permision)
+  return (ROLES[user.role] as readonly Permission[]).includes(permission)
 }
