@@ -34,6 +34,7 @@ const createNewEmp = async (args: CreateArgs) => {
   }
   if (emp_manager_id) {
     manager = await employeeRepo.findOneBy({ emp_id: emp_manager_id });
+
   }
   // if (!manager) {
   //   throw new Error(`Manager with id: ${emp_manager_id} not found`);
