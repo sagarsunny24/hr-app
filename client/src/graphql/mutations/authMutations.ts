@@ -7,6 +7,7 @@ mutation Login($input:LoginCredentials!) {
   login(input: $input) {
     accessToken
     role
+    profile_image_path
   }
 }
 `;

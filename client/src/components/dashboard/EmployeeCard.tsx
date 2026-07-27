@@ -34,7 +34,7 @@ export default function EmployeeCard({ employee }: CardProps) {
         <Chip
           label={employee.emp_status}
           sx={{
-            bgcolor: statusClr[300],
+            bgcolor: statusClr[100],
             color: statusClr[700],
             fontWeight: 600,
             px: 1,
@@ -68,7 +68,7 @@ export default function EmployeeCard({ employee }: CardProps) {
           mt: 3,
           p: 5,
           borderRadius: 4,
-          bgcolor: "#F4F7FF",
+          bgcolor: theme.palette.background.default,
         }}
       >
        
@@ -77,11 +77,11 @@ export default function EmployeeCard({ employee }: CardProps) {
          
         >
           <Box>
-            <Typography color="text.secondary">
+            <Typography color="primary">
               Department
             </Typography>
 
-            <Typography sx={{fontWeight:700,
+            <Typography color="primary" sx={{fontWeight:700,
               fontSize:22}}
               
             >
@@ -90,11 +90,12 @@ export default function EmployeeCard({ employee }: CardProps) {
           </Box>
 
           <Box>
-            <Typography color="text.secondary">
+            <Typography color="primary">
               Hired Date
             </Typography>
 
             <Typography
+            color="primary"
               sx={{fontWeight:700,
               fontSize:22}}
             >
@@ -109,14 +110,14 @@ export default function EmployeeCard({ employee }: CardProps) {
         <Stack spacing={2}>
           <Stack direction="row" spacing={2} sx={{alignItems:"center"}}>
             <EmailOutlined color="primary" />
-            <Typography sx={{fontSize:20}} >
+            <Typography color="primary" sx={{fontSize:20}} >
               {employee.emp_email}
             </Typography>
           </Stack>
 
            <Stack direction="row" spacing={2} sx={{alignItems:"center"}}>
             <CallOutlined color="primary" />
-           <Typography sx={{fontSize:20}} >
+           <Typography color = "primary"  sx={{fontSize:20}} >
             {employee.emp_phone}
             </Typography>
           </Stack>
