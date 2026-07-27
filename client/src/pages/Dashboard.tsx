@@ -4,11 +4,12 @@ import TopBar from "../components/dashboard/TopBar"
 import { Box } from "@mui/material"
 import EmployeeCard from "../components/dashboard/EmployeeCard"
 import MiddleBar from "../components/dashboard/MiddleBar"
-import PaginationBar from "@/components/dashboard/PaginationBar"
-// import { useAppSelector } from "../store/hooks"
+import PaginationBar from "../components/dashboard/PaginationBar"
+import { useAppSelector } from "../store/hooks"
 export default function Dashboard() {
-  // const query = useAppSelector((state)=>state.dashboard.searchQuery)
-  const {data:employees} = useViewAll({filter:{}}) 
+  const query = useAppSelector((state)=>state.dashboard.searchQuery)
+  const page = useAppSelector((state)=>state.dashboard.page)
+  const {data:employees} = useViewAll({filter:{offset:(page - 1) * 8,limit:8,emp_name:query}}) 
   console.log(employees)
   const count = employees? Math.floor(employees?.length / 8) : 5
   return (

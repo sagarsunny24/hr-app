@@ -3,13 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 interface DashboardProps {
   viewType:'card' | 'list',
   searchQuery:string,
-  currentTab: 0 | 1
+  currentTab: 0 | 1,
+  page:number
 }
 
 const initialState:DashboardProps = {
   viewType:'card',
   searchQuery:'',
   currentTab:0,
+  page:1
 }
 
 const dashboardSlice= createSlice({
@@ -24,9 +26,12 @@ const dashboardSlice= createSlice({
     },
     changeTab(state,action){
       state.currentTab=action.payload
+    },
+    changePage(state,action){
+      state.page =action.payload
     }
   }
 })
 
-export const  {changeView,searchQ,changeTab} = dashboardSlice.actions;
+export const  {changeView,searchQ,changeTab,changePage} = dashboardSlice.actions;
 export default dashboardSlice.reducer;
