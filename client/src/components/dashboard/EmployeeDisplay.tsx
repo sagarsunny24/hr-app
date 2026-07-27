@@ -1,13 +1,16 @@
 
 import useViewAll from "../../hooks/useViewAll";
-import { useAppSelector } from "../../store/hooks";
+import { useAppSelector,useAppDispatch } from "../../store/hooks";
 import CircularProgress from "@mui/material/CircularProgress";
 import PaginationBar from "../../components/dashboard/PaginationBar";
 import EmployeeCard from "../../components/dashboard/EmployeeCard";
+import { countEmps } from "../../store/slices/dashboardSlice";
+
 import { Box } from "@mui/material";
 export default function EmployeeDisplay() {
   const query = useAppSelector((state) => state.dashboard.searchQuery);
   const page = useAppSelector((state) => state.dashboard.page);
+  const dispatch = useAppDispatch()
   const { data, isLoading} = useViewAll({
     filter: {
       offset: (page - 1) * 8,
@@ -17,6 +20,7 @@ export default function EmployeeDisplay() {
   });
   const employees = data?.data;
   console.log(employees);
+  dispatch(countEmps(employees?.length))
   const count = data?.totalPages ?? 5;
   if (isLoading) {
     return (

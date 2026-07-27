@@ -4,14 +4,16 @@ interface DashboardProps {
   viewType:'card' | 'list',
   searchQuery:string,
   currentTab: 0 | 1,
-  page:number
+  page:number,
+  totalEmps:number
 }
 
 const initialState:DashboardProps = {
   viewType:'card',
   searchQuery:'',
   currentTab:0,
-  page:1
+  page:1,
+  totalEmps:0
 }
 
 const dashboardSlice= createSlice({
@@ -29,9 +31,12 @@ const dashboardSlice= createSlice({
     },
     changePage(state,action){
       state.page =action.payload
+    },
+    countEmps(state,action){
+      state.totalEmps =action.payload
     }
   }
 })
 
-export const  {changeView,searchQ,changeTab,changePage} = dashboardSlice.actions;
+export const  {changeView,searchQ,changeTab,changePage,countEmps} = dashboardSlice.actions;
 export default dashboardSlice.reducer;

@@ -20,11 +20,12 @@ export default function EmployeeCard({ employee }: CardProps) {
       elevation={0}
       sx={{
         border: "1px solid",
-        borderColor: theme.palette.background.paper,
+        borderColor: theme.palette.primary.light,
         px: 2,
         py: 1,
        borderRadius:4,
-       width:420,
+       width:320,
+        boxShadow: "0px 4px 20px rgba(0,0,0,0.08)",
       }}
     >
       <Stack
@@ -51,22 +52,22 @@ export default function EmployeeCard({ employee }: CardProps) {
             borderRadius: 4,}}/>
 
             <Box sx={{textAlign:'center'}}>
-              <Typography sx={{fontWeight:700,fontSize:32}}>{employee.emp_name}</Typography>
+              <Typography sx={{fontWeight:700,fontSize:24}}>{employee.emp_name}</Typography>
 
           <Typography
           sx={{
              color:"primary",
             fontWeight:500,
-            fontSize:20
+            fontSize:14
           }}
             
           >{employee.emp_designation}</Typography>
             </Box>
              <Box
         sx={{
-        width:400,
-          mt: 3,
-          p: 5,
+        width:300,
+      
+          p: 2,
           borderRadius: 4,
           bgcolor: theme.palette.background.default,
         }}
@@ -82,7 +83,7 @@ export default function EmployeeCard({ employee }: CardProps) {
             </Typography>
 
             <Typography color="primary" sx={{fontWeight:700,
-              fontSize:22}}
+              fontSize:14}}
               
             >
               {employee.emp_dept}
@@ -97,7 +98,7 @@ export default function EmployeeCard({ employee }: CardProps) {
             <Typography
             color="primary"
               sx={{fontWeight:700,
-              fontSize:22}}
+              fontSize:14}}
             >
               {employee.emp_joining_date}
             </Typography>
@@ -110,14 +111,14 @@ export default function EmployeeCard({ employee }: CardProps) {
         <Stack spacing={2}>
           <Stack direction="row" spacing={2} sx={{alignItems:"center"}}>
             <EmailOutlined color="primary" />
-            <Typography color="primary" sx={{fontSize:20}} >
+            <Typography color="primary" sx={{fontSize:14}} >
               {employee.emp_email}
             </Typography>
           </Stack>
 
            <Stack direction="row" spacing={2} sx={{alignItems:"center"}}>
             <CallOutlined color="primary" />
-           <Typography color = "primary"  sx={{fontSize:20}} >
+           <Typography color = "primary"  sx={{fontSize:14}} >
             {employee.emp_phone}
             </Typography>
           </Stack>

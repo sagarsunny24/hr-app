@@ -233,7 +233,7 @@ export default function SideBar({children}:DrawerProps) {
           </Typography>
             </Box>
              <Box sx={{display:'flex',alignItems:'center'}}>
-          <MaterialUISwitch sx={{ m: 1 }} defaultChecked onChange={handleThemeChange} />
+          <MaterialUISwitch sx={{ m: 1 }}  onChange={handleThemeChange} />
           <Divider orientation='vertical' sx={{color:theme.palette.divider}}/>
           <StyledBadge
         overlap="circular"
