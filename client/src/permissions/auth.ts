@@ -14,6 +14,7 @@ const ROLES = {
   ],
   manager:[
     "view:personal",
+    "create:employee"
   ]
 } as const
 
