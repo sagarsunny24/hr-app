@@ -6,7 +6,7 @@ import {  type ViewAllFilter} from '@hr-app/shared';
 
 export default function useViewAll(filter:ViewAllFilter){
   return useQuery({
-    queryKey:["viewAll"],
+    queryKey:["viewAll",filter],
     queryFn:async()=>{
       const {data,error}= await apolloClient.query({
         query:VIEWALL_QUERY,

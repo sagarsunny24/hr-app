@@ -141,8 +141,7 @@ export type ViewAllFilter = {
   emp_status?:String
  }
 }
-export interface ViewAllResponse {
-  viewAll:{
+export interface Employee {
   emp_name: string;
   emp_email: string;
   emp_phone: string;
@@ -152,8 +151,16 @@ export interface ViewAllResponse {
   emp_joining_date: string;
   emp_status: EmpStatus;
   profile_image_path: string;
-  }[]
- 
+}
+
+export interface ViewAllResponse {
+  viewAll: {
+    data: Employee[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
 export interface MngrDetailsRes {
   viewAll:MngrDetails
