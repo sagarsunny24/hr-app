@@ -117,8 +117,18 @@ const viewAllEmployees = async (
   }
   qb.skip(filter?.offset ?? 0);
   qb.take(filter?.limit ?? 10);
+  const [employees,total] = await qb.getManyAndCount()
+  const limit = filter?.limit ?? 10;
+const offset = filter?.offset ?? 0;
 
-  return qb.getMany();
+const page = Math.floor(offset / limit) + 1;
+  return {
+    data:employees,
+    total:total,
+    page,
+    limit,
+    totalPages: Math.ceil(total/limit),
+  }
 
   // const company = await companyRepo.findOneBy({company_id:company_id})
   // if(!company){

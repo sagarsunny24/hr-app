@@ -16,6 +16,13 @@ emp_name: String!
   emp_designation: String!
   profile_image_path: String
   }
+type EmployeeListResponse {
+  data: [EmployeeResponse!]!
+  total: Int!
+  totalPages: Int!
+  limit: Int!
+  page:Int!
+}
 
   input EmployeeFilter {
   limit:Int = 10
@@ -29,7 +36,7 @@ emp_name: String!
   
   }
 type Query {
-viewAll(filter: EmployeeFilter): [EmployeeResponse]
+viewAll(filter: EmployeeFilter): EmployeeListResponse!
 }
 
 
