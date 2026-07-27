@@ -10,9 +10,14 @@ import {
   Typography,
   type SelectChangeEvent,
 } from "@mui/material";
-import {toast,Bounce} from 'react-toastify'
+
+import { toast, Bounce } from "react-toastify";
 import { useAppDispatch } from "../../store/hooks";
-import { openForm } from "../../store/slices/formSlice";
+import {
+  openForm,
+  storeInfo,
+  empCredentials,
+} from "../../store/slices/formSlice";
 import type { EmployeeDetails, MngrDetails } from "@hr-app/shared";
 import useAddEmployee from "../../hooks/useAddEmployee";
 import useManagerDetails from "../../hooks/useManagerDetails";
@@ -34,51 +39,58 @@ export default function EmployeeForm() {
   }
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    try{
-  const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    console.log(data);
-    if (profileImg) {
-      publicUrl.current = await uploadImage(profileImg);
-    }
-    const manager = data.emp_manager_id === ""? null : data.emp_manager_id
-    console.log(publicUrl.current);
-    const input = {
-      ...data,
-      emp_manager_id:manager,
-      profile_image_path: publicUrl.current,
-    } as EmployeeDetails;
-    console.log("input:", input);
-    const res = await addNewEmployee({ input });
-    if(res.message) {
-      toast.success(res.message,{
-position: "top-right",
-autoClose: 5000,
-hideProgressBar: false,
-closeOnClick: false,
-pauseOnHover: true,
-draggable: true,
-progress: undefined,
-theme: "light",
-transition: Bounce,
-      })
-      
-    }
-    dispatch(openForm(false))
-    }catch(err){
+    try {
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+      console.log(data);
+      if (profileImg) {
+        publicUrl.current = await uploadImage(profileImg);
+      }
+      const manager = data.emp_manager_id === "" ? null : data.emp_manager_id;
+      console.log(publicUrl.current);
+      const input = {
+        ...data,
+        emp_manager_id: manager,
+        profile_image_path: publicUrl.current,
+      } as EmployeeDetails;
+      console.log("input:", input);
+      const res = await addNewEmployee({ input });
+      dispatch(
+        storeInfo({
+          email: res.addEmployee?.email,
+          pswrd: res.addEmployee?.temp_pswrd,
+        }),
+      );
+      dispatch(empCredentials(true));
+      console.log(res.addEmployee?.email);
+      console.log(res.addEmployee?.temp_pswrd);
+      if (res?.addEmployee?.message) {
+        toast.success(res.addEmployee.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+      dispatch(openForm(false));
+    } catch (err) {
       toast.error(`Error ${err} occured`, {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          });
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
-    
   }
   async function fetchOnChange(e: SelectChangeEvent) {
     const emp_dept = e.target.value;
@@ -86,9 +98,12 @@ transition: Bounce,
       (await fetchManagers({ filter: { emp_dept, emp_role: "manager" } })) ??
       [];
     // console.log(data);
-    if (data) setManagers(data?? []);
+    if (data) setManagers(data ?? []);
   }
   return (
+    <>
+ 
+    
     <Box component="form" onSubmit={handleSubmit}>
       <Box>
         <Typography>Add Employee</Typography>
@@ -196,10 +211,16 @@ transition: Bounce,
             label="Manager"
             fullWidth
             sx={{ mb: 2 }}
-          ><MenuItem key={"empty"} value={""}>No Manager</MenuItem>
+          >
+            <MenuItem key={"empty"} value={""}>
+              No Manager
+            </MenuItem>
             {managers?.map((manager) => (
               <MenuItem key={manager.emp_id} value={manager.emp_id}>
-                <Avatar src={`${manager.profile_image_path}`} alt={manager.emp_name} />
+                <Avatar
+                  src={`${manager.profile_image_path}`}
+                  alt={manager.emp_name}
+                />
                 {manager.emp_name}
               </MenuItem>
             ))}
@@ -222,5 +243,6 @@ transition: Bounce,
         </Button>
       </Box>
     </Box>
+    </>
   );
 }

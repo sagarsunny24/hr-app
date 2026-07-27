@@ -4,6 +4,7 @@ import TopBar from "../components/dashboard/TopBar";
 import { Box } from "@mui/material";
 import EmployeeDisplay from "../components/dashboard/EmployeeDisplay";
 import MiddleBar from "../components/dashboard/MiddleBar";
+import EmployeeCreatedCard from "../components/dashboard/EmployeeCreatedCard";
 
 
 export default function Dashboard() {
@@ -12,6 +13,7 @@ export default function Dashboard() {
     <Box>
       <TopBar />
       <MiddleBar />
+      <EmployeeCreatedCard />
      <EmployeeDisplay />
     </Box>
   );

@@ -173,8 +173,14 @@ export interface MngrDetails {
 emp_id:string,
   emp_name:string,
   profile_image_path: string | null
-  
+}
 
-  
+
+export interface AddEmpRes {
+  addEmployee?:{
+    email:string;
+    temp_pswrd:string;
+    message:string;
+  }
 }
 export {}
