@@ -133,6 +133,7 @@ export type ViewAllFilter = {
  filter:{
    limit?:number;
   offset?: number;
+  emp_name?:string;
   emp_dept?:string
   emp_role?:string;
   emp_designation?:string;

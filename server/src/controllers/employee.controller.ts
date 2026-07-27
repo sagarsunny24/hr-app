@@ -88,6 +88,13 @@ const viewAllEmployees = async (
 
   qb.where("employee.company_id = :company_id", { company_id });
 
+  if(filter?.emp_name && filter?.emp_name?.trim() !== ""){
+    qb.andWhere("employee.emp_name ILIKE :name",{
+      name:`%${filter.emp_name.trim()}%` 
+
+    })
+   
+  }
   if (filter?.emp_dept) {
     qb.andWhere("employee.emp_dept = :dept", { dept: filter.emp_dept });
   }
