@@ -123,7 +123,7 @@ const loginUser= async (args:LoginArgs,res:Response) => {
           secure: false,
           maxAge: 604800000,
         });
-        return { accessToken: accessToken, role: employee.emp_role };
+        return { accessToken: accessToken, role: employee.emp_role,profile_image_path:employee.profile_image_path };
         
       }
     }

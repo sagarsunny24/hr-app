@@ -49,6 +49,7 @@ input LoginCredentials {
 type LoginResponse {
   accessToken:String
   role:String
+  profile_image_path:String
 }
 type RegisterResponse {
   message: String!
