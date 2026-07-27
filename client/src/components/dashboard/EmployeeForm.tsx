@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Button,
   FormControl,
@@ -84,8 +85,8 @@ transition: Bounce,
     const data: MngrDetails[] =
       (await fetchManagers({ filter: { emp_dept, emp_role: "manager" } })) ??
       [];
-    console.log(data);
-    if (data) setManagers(data ?? []);
+    // console.log(data);
+    if (data) setManagers(data?? []);
   }
   return (
     <Box component="form" onSubmit={handleSubmit}>
@@ -198,6 +199,7 @@ transition: Bounce,
           ><MenuItem key={"empty"} value={""}>No Manager</MenuItem>
             {managers?.map((manager) => (
               <MenuItem key={manager.emp_id} value={manager.emp_id}>
+                <Avatar src={`${manager.profile_image_path}`} alt={manager.emp_name} />
                 {manager.emp_name}
               </MenuItem>
             ))}

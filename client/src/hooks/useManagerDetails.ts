@@ -17,7 +17,7 @@ export default function useManagerDetails(){
       if(error){
         throw new Error(error.message)
       }
-      return data?.viewAll ?? []
+      return data?.viewAll.data ?? []
     }
   });
   return {fetchManagers}

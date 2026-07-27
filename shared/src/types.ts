@@ -163,7 +163,9 @@ export interface ViewAllResponse {
   };
 }
 export interface MngrDetailsRes {
-  viewAll:MngrDetails
+  viewAll:{
+    data: MngrDetails[]
+  }
   
 }
 export interface MngrDetails {
@@ -171,6 +173,8 @@ export interface MngrDetails {
 emp_id:string,
   emp_name:string,
   profile_image_path: string | null
+  
+
   
 }
 export {}
