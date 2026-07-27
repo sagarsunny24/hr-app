@@ -6,11 +6,12 @@ export const loginThunk = createAsyncThunk(
   'auth/login',
   async(loginResponse:LoginResponse,{rejectWithValue}) => {
     try{
-      const {accessToken,role} = loginResponse;
+      const {accessToken,role,profile_image_path} = loginResponse;
       const user = {
         accessToken,
         role,
-        isAuthenticated:true
+        isAuthenticated:true,
+        profile_image_path
       } 
       return user;
     }catch(err){

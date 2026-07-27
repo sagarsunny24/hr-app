@@ -94,6 +94,7 @@ export interface Context {
 export interface LoginResponse {
   accessToken:string,
   role:EmpRole
+  profile_image_path: string | null,
 }
 export interface ErrorResponse {
   message:string
@@ -104,7 +105,8 @@ export interface AuthInitialState {
   user:{
 accessToken:string | null,
   role:EmpRole,
-  isAuthenticated:boolean
+  isAuthenticated:boolean,
+  profile_image_path:string | null
   },
   error:{message:string} | null
 }

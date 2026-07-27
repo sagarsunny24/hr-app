@@ -8,7 +8,8 @@ const initialState:AuthInitialState = {
   user:{
 accessToken:null,
   role:EmpRole.EMPLOYEE,
-  isAuthenticated:false
+  isAuthenticated:false,
+  profile_image_path:null,
   },
   error:null 
 }
@@ -19,7 +20,8 @@ const authSlice = createSlice({
   reducers:{
     logout(state){
       state.user.accessToken = '';
-      state.user.role =EmpRole.EMPLOYEE
+      state.user.role =EmpRole.EMPLOYEE;
+      state.user.profile_image_path =null
     }
   },
   extraReducers:(builder)=>{
