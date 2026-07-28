@@ -208,4 +208,18 @@ export interface AttendanceFilter {
      emp_id?:string
   }
 }
+export interface AttendanceLog {
+attendance_id: number,
+        check_in: string | null,
+        check_out: string | null,
+        attendance_date: String,
+        status: LogStatus,
+        total_hours: number
+}
+export interface AttendanceResponse {
+
+  attendanceLog:AttendanceLog[]
+    
+      
+}
 export {}

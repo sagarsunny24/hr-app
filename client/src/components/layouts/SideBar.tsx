@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { type AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import {ListItemText} from '@mui/material';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
@@ -11,13 +12,16 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import WorkIcon from '@mui/icons-material/Work';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Switch from '@mui/material/Switch';
 import { useAppDispatch } from '../../store/hooks';
 import { toggleTheme } from '../../store/slices/themeSlice';
-import { Avatar } from '@mui/material';
+import { Avatar, ListItem, ListItemButton, ListItemIcon } from '@mui/material';
 import { useAppSelector } from '../../store/hooks';
 import Badge from '@mui/material/Badge';
+import { useNavigate } from 'react-router';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     backgroundColor: '#44b700',
@@ -192,7 +196,7 @@ interface DrawerProps {
 
 export default function SideBar({children}:DrawerProps) {
   const dispatch = useAppDispatch()
-
+  const navigate = useNavigate()
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -253,7 +257,99 @@ export default function SideBar({children}:DrawerProps) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
+        <List  sx={{
+    px: 1, 
+  }}>
+          <ListItem key={"attendance"} disablePadding sx={{display:'block', bgcolor:theme.palette.primary.main,borderRadius:4,mb:1}}>
+            <ListItemButton onClick={()=>navigate('/home')} sx={[
+                  {
+                    minHeight: 48,
+                    px: 2.5,
+                  },
+                  open
+                    ? {
+                        justifyContent: 'initial',
+                      }
+                    : {
+                        justifyContent: 'center',
+                      },
+                ]}
+              >
+                <ListItemIcon  sx={[
+                    {
+                      color:theme.palette.primary.light,
+                      minWidth: 0,
+                      justifyContent: 'center',
+                    },
+                    open
+                      ? {
+                          mr: 3,
+                        }
+                      : {
+                          mr: 'auto',
+                        },
+                  ]}
+                ><DashboardIcon /></ListItemIcon>
+                 <ListItemText
+                  primary={"Dashboard"}
+                  sx={[
+                    { color:theme.palette.primary.light},
+                    open
+                      ? {
+                          opacity: 1,
+                        }
+                      : {
+                          opacity: 0,
+                        },
+                  ]}
+                />
+              </ListItemButton>
+          </ListItem>
+          <ListItem key={"attendance"} disablePadding sx={{display:'block', bgcolor:theme.palette.primary.main,borderRadius:4,}}>
+            <ListItemButton onClick={()=>navigate('/home/attendance')} sx={[
+                  {
+                    minHeight: 48,
+                    px: 2.5,
+                  },
+                  open
+                    ? {
+                        justifyContent: 'initial',
+                      }
+                    : {
+                        justifyContent: 'center',
+                      },
+                ]}
+              >
+                <ListItemIcon  sx={[
+                    {
+                      color:theme.palette.primary.light,
+                      minWidth: 0,
+                      justifyContent: 'center',
+                    },
+                    open
+                      ? {
+                          mr: 3,
+                        }
+                      : {
+                          mr: 'auto',
+                        },
+                  ]}
+                ><WorkIcon /></ListItemIcon>
+                 <ListItemText
+                  primary={"Attendance"}
+                  sx={[
+                    { color:theme.palette.primary.light},
+                    open
+                      ? {
+                          opacity: 1,
+                        }
+                      : {
+                          opacity: 0,
+                        },
+                  ]}
+                />
+              </ListItemButton>
+          </ListItem>
           {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton

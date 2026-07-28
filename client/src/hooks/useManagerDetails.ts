@@ -12,7 +12,8 @@ export default function useManagerDetails(){
     queryFn:async()=>{
       const {data,error} = await apolloClient.query({
         query:FETCH_MNGR_QUERY,
-        variables: filter
+        variables: filter,
+        fetchPolicy:'network-only'
       })
       if(error){
         throw new Error(error.message)

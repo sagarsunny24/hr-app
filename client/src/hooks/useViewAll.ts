@@ -11,6 +11,7 @@ export default function useViewAll(filter:ViewAllFilter){
       const {data,error}= await apolloClient.query({
         query:VIEWALL_QUERY,
         variables:filter,
+        fetchPolicy:'network-only'
       })
       if (error) {
         throw new Error(error.message);

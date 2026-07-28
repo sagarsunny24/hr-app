@@ -39,7 +39,7 @@ export default function MiddleBar() {
       indicatorColor="primary"
       >
         <Tab label="Employees" />
-        <Tab label="Leave Request" />
+        <Tab label="Attendance" />
 
       </Tabs>
 <Stack direction="row" spacing={2}>

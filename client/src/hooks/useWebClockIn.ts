@@ -1,16 +1,16 @@
 
 import { apolloClient } from "../graphql/apolloClient";
-import { ADDEMP_MUTATION } from "../graphql/mutations/addEmpMutation";
+import { WEB_CLOCK_MUTATION } from "../graphql/mutations/webClockIn";
 import { useQueryClient ,useMutation } from "@tanstack/react-query";
-import type { AddEmpRes, EmployeeDetails } from "@hr-app/shared";
+import type {  ClockInResponse } from "@hr-app/shared";
 
-export default function useAddEmployee() {
+export  function useWebClockIn() {
   const queryClient = useQueryClient()
-  const {mutateAsync:addNewEmployee} = useMutation<AddEmpRes,Error,{input:EmployeeDetails}>({
-    mutationFn: async(input)=>{
+  const {mutateAsync:webClockIn} = useMutation<ClockInResponse,Error,{timestamp:string}>({
+    mutationFn: async(timestamp)=>{
       const {data} = await apolloClient.mutate({
-        mutation:ADDEMP_MUTATION,
-        variables:input,
+        mutation:WEB_CLOCK_MUTATION,
+        variables:timestamp,
         fetchPolicy:'network-only'
       });
       if(!data) {
@@ -19,9 +19,8 @@ export default function useAddEmployee() {
       return data
     },
     onSuccess:()=>{queryClient.invalidateQueries({
-      queryKey:["viewAll"]
+      queryKey:["attendance"]
     })}
   })
-  return addNewEmployee;
-  
+  return webClockIn;
 }
