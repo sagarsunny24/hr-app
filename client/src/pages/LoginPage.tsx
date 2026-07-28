@@ -12,12 +12,12 @@ export default function LoginPage() {
   console.log(auth);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [loginMutation, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted: (data) => {
       dispatch(loginThunk(data?.login));
-      navigate('/home')
+      navigate("/home");
     },
     onError: (err) => {
       toast.error(err.message);
@@ -40,53 +40,119 @@ export default function LoginPage() {
       sx={{
         backgroundImage: `url(${auth})`,
         backgroundSize: "cover",
+        backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         width: "100vw",
-        height: "100vh",
+        minHeight: "100vh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        p: 2,
       }}
     >
       <Card
+        elevation={0}
         sx={{
-          width: "448px",
-          height: "727px",
-          borderRadius: 5,
+          width: 450,
+          borderRadius: 4,
+          p: 4,
+          bgcolor: "background.paper",
+          border: 1,
+          borderColor: "divider",
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 3,
+          }}
+        >
           <Box
-            sx={{ width: "102px", height: "30px" }}
             component="img"
-            alt="Company Logo"
             src={MyLogo}
+            alt="Company Logo"
+            sx={{
+              width: 120,
+              objectFit: "contain",
+            }}
           />
 
-          <Box>
-            <Typography>Welcome to Humanly</Typography>
-            <Typography>Sign in to access your employee profile</Typography>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography
+              variant="h4"
+            >
+              Welcome Back
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 1,
+                color: "text.secondary",
+                fontSize: 15,
+              }}
+            >
+              Sign in to access your employee profile
+            </Typography>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
             <TextField
-              label="Enter your email"
+              fullWidth
+              label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            ></TextField>
+            />
             <TextField
-              label="Enter your password"
+              fullWidth
+              type="password"
+              label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            ></TextField>
+            />
           </Box>
-          {!loading && (
-            <Button variant="contained" onClick={handleLogin}>
-              Login
-            </Button>
-          )}
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={handleLogin}
+            disabled={loading}
+            sx={{
+              mt: 1,
+              py: 1.2,
+              borderRadius: 2,
+              
+            }}
+          >
+            {loading ? "Signing In..." : "Login"}
+          </Button>
 
-          {/* <Button variant="contained">Register</Button> */}
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{
+              py: 1.2,
+              borderRadius: 2,
+              borderColor: "divider",
+            }}
+          >
+            Register
+          </Button>
         </Box>
+        <Typography
+          sx={{
+            mt: 1,
+            fontSize: 13,
+          }}
+        >
+          Humanly HR Management System
+        </Typography>
       </Card>
     </Box>
   );

@@ -6,11 +6,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Chip } from '@mui/material';
+
 import type { AttendanceLog } from '@hr-app/shared';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -52,20 +54,37 @@ export default function AttendanceTable({data}:AttTableProps) {
               <StyledTableCell component="th" scope="row">
                 {row.attendance_date}
               </StyledTableCell>
-              <StyledTableCell align="right">
+              
   <StyledTableCell align="right">
    {new Date(Number(row.check_in)).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
   })}
-</StyledTableCell>
+
 </StyledTableCell>
               <StyledTableCell align="right">{new Date(Number(row.check_out)).toLocaleTimeString("en-US",{
                 hour:"2-digit",minute:"2-digit",hour12:true,
               })}</StyledTableCell>
-              <StyledTableCell align="right">{row.total_hours} Hours</StyledTableCell>
-              <StyledTableCell align="right">{row.status}</StyledTableCell>
+              <StyledTableCell align="right">
+  {Math.floor(row.total_hours)}h{" "}
+  {Math.round((row.total_hours - Math.floor(row.total_hours)) * 60)}m
+</StyledTableCell>
+              <StyledTableCell align="right"> <Chip
+                label={row?.status ?? "Not Checked In"}
+                color={
+                  row?.status === "present"
+                    ? "success"
+                    : row?.status === "late"
+                      ? "warning"
+                      : row?.status === "half_day"
+                        ? "info"
+                        : "default"
+                }
+                sx={{
+                  fontWeight: 600,
+                }}
+              /></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
