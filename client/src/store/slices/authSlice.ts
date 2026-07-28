@@ -22,6 +22,10 @@ const authSlice = createSlice({
       state.user.accessToken = '';
       state.user.role =EmpRole.EMPLOYEE;
       state.user.profile_image_path =null
+    },
+    refreshUser(state,action){
+      state.status='succeeded';
+      state.user = action.payload
     }
   },
   extraReducers:(builder)=>{
@@ -39,5 +43,5 @@ const authSlice = createSlice({
     })
   }
 })
-
+export const {logout,refreshUser} = authSlice.actions
 export default authSlice.reducer

@@ -2,11 +2,29 @@ import { Button ,Box,Card,Typography} from "@mui/material"
 import { useEffect } from "react"
 import { useNavigate } from "react-router"
 import MyLogo from "../assets/HR-logo.webp";
-
+import { useAppDispatch } from "../store/hooks";
+import { apolloClient } from "../graphql/apolloClient";
+import { refreshUser } from "../store/slices/authSlice";
+import { REFRESH_QUERY } from "../graphql/queries/refreshQuery";
 const HomePage = () => {
-  useEffect(()=>{
+  const dispatch = useAppDispatch()
+ useEffect(() => {
+  async function refreshToken() {
+    try {
+      const response = await apolloClient.query({
+        query: REFRESH_QUERY,
+      });
 
-  })
+      console.log(response.data);
+
+      dispatch(refreshUser(response.data));
+    } catch (error) {
+      console.error("Refresh failed:", error);
+    }
+  }
+
+  refreshToken();
+}, [dispatch]);
   const navigate = useNavigate()
   return (
 <Box sx={{display:'flex',alignItems:'center',justifyContent:'center',mt:'25%',bgcolor:''}}>
