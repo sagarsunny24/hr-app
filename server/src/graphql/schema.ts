@@ -35,8 +35,24 @@ type EmployeeListResponse {
     emp_status:String
   
   }
+
+  input AttendanceFilter {
+  limit:Int = 30
+  offset:Int = 0
+  emp_dept:String
+  emp_id:String
+  }
+  type AttendanceLogResponse {
+  attendance_id: Int
+attendance_date:String
+check_in:String
+check_out:String
+totalHours:Float
+status:String!
+  }
 type Query {
 viewAll(filter: EmployeeFilter): EmployeeListResponse!
+attendanceLog(filter:AttendanceFilter) : [AttendanceLogResponse]!
 }
 
 

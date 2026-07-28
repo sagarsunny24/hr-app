@@ -2,6 +2,7 @@ import {
   LogStatus,
   type ClockInArgs,
   type ClockInResponse,
+  type AttendanceFilter
 } from "@hr-app/shared";
 import { AppDataSource } from "@/config/db.js";
 import { Companies, Employee, Attendance } from "@/entities/index.js";
@@ -86,4 +87,25 @@ const status =
     };
   }
 }
-export {webCheckIn}
+
+async function fetchAttendanceLog(company_id:string,{filter}:AttendanceFilter){
+  const attendanceRepo = AppDataSource.getRepository(Attendance)
+  const qb = attendanceRepo.createQueryBuilder("attendance").leftJoinAndSelect("attendance.emp","employee").where("attendance.company_id = :companyId",{companyId:company_id});
+
+  if(filter?.emp_id){
+    qb.andWhere("attendance.emp_id =:emp_id",{emp_id:filter.emp_id})
+  }
+  if(filter?.emp_dept){
+    qb.andWhere("employee.emp_dept =:emp_dept",{emp_dept:filter.emp_dept})
+  }
+  qb.skip(filter?.offset ?? 0)
+  qb.take(filter?.limit ?? 30)
+
+  // console.log(await qb.getMany())
+  // // return await qb.getMany()
+  // const {attendance_id,check_in,check_out,attendance_date,status} =await qb.getMany()
+  // console.log(attendance_id,check_in)
+  return await qb.getMany()
+}
+
+export {webCheckIn,fetchAttendanceLog}

@@ -16,7 +16,7 @@ import {
   viewAllEmployees,
 } from "@/controllers/employee.controller.js";
 import { Code } from "typeorm/driver/mongodb/bson.typings.js";
-import { webCheckIn } from "@/controllers/attendance.controller.js";
+import { webCheckIn,fetchAttendanceLog } from "@/controllers/attendance.controller.js";
 
 export const resolvers = {
   Query: {
@@ -32,6 +32,17 @@ export const resolvers = {
 
       return await viewAllEmployees(context.user.company_id, { filter });
     },
+    attendanceLog:async(
+       _parents: unknown,
+      { filter }: ViewAllFilter,
+      context: Context,
+    ) =>{
+      if (!context.user)
+        throw new GraphQLError("Unauthorized", {
+          extensions: { code: "FORBIDDEN" },
+        });
+        return await fetchAttendanceLog(context.user.company_id,{filter})
+    }
   },
   Mutation: {
     login: async (

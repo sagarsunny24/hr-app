@@ -199,4 +199,13 @@ export interface ClockInResponse {
   totalHours:number;
   status:LogStatus;
 }
+
+export interface AttendanceFilter {
+  filter:{
+    limit?:number,
+     offset?: number;
+     emp_dept?:string,
+     emp_id?:string
+  }
+}
 export {}
