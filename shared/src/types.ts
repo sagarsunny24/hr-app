@@ -100,6 +100,9 @@ export interface LoginResponse {
   role:EmpRole
   profile_image_path: string | null,
 }
+export interface RefreshResponse {
+  refreshEndpoint: LoginResponse | null;
+}
 export interface ErrorResponse {
   message:string
 }

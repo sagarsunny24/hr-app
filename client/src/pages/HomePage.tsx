@@ -6,26 +6,29 @@ import { useAppDispatch } from "../store/hooks";
 import { apolloClient } from "../graphql/apolloClient";
 import { refreshUser } from "../store/slices/authSlice";
 import { REFRESH_QUERY } from "../graphql/queries/refreshQuery";
+
 const HomePage = () => {
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
  useEffect(() => {
   async function refreshToken() {
     try {
-      const response = await apolloClient.query({
+      const response= await apolloClient.query({
         query: REFRESH_QUERY,
       });
-
-      console.log(response.data);
-
-      dispatch(refreshUser(response.data));
+ if (!response.data?.refreshEndpoint) return;
+      console.log(response?.data?.refreshEndpoint);
+      const {accessToken,role,profile_image_path} = response.data.refreshEndpoint
+      dispatch(refreshUser({accessToken,role,isAuthenticated:true,profile_image_path}));
+      navigate('/home')
     } catch (error) {
       console.error("Refresh failed:", error);
     }
   }
 
   refreshToken();
-}, [dispatch]);
-  const navigate = useNavigate()
+}, [dispatch,navigate]);
+  
   return (
 <Box sx={{display:'flex',alignItems:'center',justifyContent:'center',mt:'25%',bgcolor:''}}>
     <Card

@@ -6,7 +6,7 @@ export default function AuthLayout() {
  
   const user = useAppSelector((state)=> state.auth.user)
 
-  if(user.isAuthenticated){
+  if(user?.accessToken){
 return (
   <SideBar>
     <Outlet />
