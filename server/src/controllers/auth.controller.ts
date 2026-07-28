@@ -124,7 +124,7 @@ const loginUser = async (args: LoginArgs, res: Response) => {
         await userRepo.save(user);
         res.cookie("jwt", refreshToken, {
           httpOnly: true,
-          sameSite: "none",
+          sameSite: "lax",
           secure: false,
           maxAge: 604800000,
         });
@@ -169,7 +169,7 @@ async function fetchUserByRefreshToken(refreshToken: string) {
     emp_role: user.emp_role,
     company_id: user.company.company_id,
   };
-  const accessToken = jwt.sign(payload, envSchema.ACCESS_TOKEN_SECRET, {
+  const accessToken =  jwt.sign(payload, envSchema.ACCESS_TOKEN_SECRET, {
     expiresIn: "1d",
   });
   const newrefreshToken = jwt.sign(payload, envSchema.REFRESH_TOKEN_SECRET, {
