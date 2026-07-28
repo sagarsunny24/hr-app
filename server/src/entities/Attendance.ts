@@ -36,6 +36,9 @@ export class Attendance {
   @Column({ type: "timestamptz", nullable: true })
   check_out!: Date | null;
 
+  @Column({type:'float',default:0.0})
+  total_hours!: number;
+
   @Column({ type: "text", default: LogStatus.ABSENT })
   status!: LogStatus;
 }

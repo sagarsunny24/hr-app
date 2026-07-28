@@ -54,6 +54,7 @@ if (checkIn > noon.getTime()) {
       attendance_date: attendanceDate,
       check_in: new Date(timestamp),
       status: status,
+      total_hours:0
     });
     await attendanceRepo.save(newLog);
     return {
@@ -73,10 +74,11 @@ const status =
     : todayLog.status;
     todayLog.check_out = new Date(timestamp);
     todayLog.status = status;
-    await attendanceRepo.save(todayLog);
-    const totalHours =
+     const totalHours =
       (new Date(timestamp).getTime() - todayLog.check_in!.getTime()) /
       (1000 * 60 * 60);
+    todayLog.total_hours = totalHours;
+    await attendanceRepo.save(todayLog);
     return {
       isLoggedIn: false,
       loggedTimestamp: attendanceDate,

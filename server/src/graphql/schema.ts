@@ -47,7 +47,7 @@ type EmployeeListResponse {
 attendance_date:String
 check_in:String
 check_out:String
-totalHours:Float
+total_hours:Float
 status:String!
   }
 type Query {
