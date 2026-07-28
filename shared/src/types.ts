@@ -185,4 +185,18 @@ export interface AddEmpRes {
     message:string;
   }
 }
+
+export interface ClockInArgs {
+  company_id:string;
+  emp_id:string;
+  timestamp:string;
+}
+export interface ClockInResponse {
+  isLoggedIn:boolean;
+  loggedTimestamp:string;
+  checkIn:Date | null;
+  checkOut:Date| null;
+  totalHours:number;
+  status:LogStatus;
+}
 export {}

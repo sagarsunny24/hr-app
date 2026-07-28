@@ -73,10 +73,21 @@ input RegisterDetails {
 
   password: String!
 }
+type AttendanceResponse {
+isLoggedIn:Boolean!
+loggedTimestamp:String!
+checkIn:String
+checkOut:String
+totalHours:Float
+status:String!
+
+}
+
 type Mutation {
   login(input:LoginCredentials!): LoginResponse!
   register(input:RegisterDetails!):RegisterResponse!
   addEmployee(input:EmployeeDetails!):Response
+  webClockIn(timestamp:String!):AttendanceResponse!
 }
 type Response {
 message:String!

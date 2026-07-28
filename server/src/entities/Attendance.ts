@@ -28,7 +28,7 @@ export class Attendance {
   company!:Companies
   
   @Column({ type: "date" })
-  attendance_date!: Date;
+  attendance_date!: string;
 
   @Column({ type: "timestamptz", nullable: true })
   check_in!: Date | null;

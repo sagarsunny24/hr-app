@@ -11,22 +11,27 @@ import {
 } from "@hr-app/shared";
 import type { Response } from "express";
 import { GraphQLError } from "graphql";
-import { createNewEmp, viewAllEmployees } from "@/controllers/employee.controller.js";
+import {
+  createNewEmp,
+  viewAllEmployees,
+} from "@/controllers/employee.controller.js";
+import { Code } from "typeorm/driver/mongodb/bson.typings.js";
+import { webCheckIn } from "@/controllers/attendance.controller.js";
 
 export const resolvers = {
   Query: {
-    viewAll:async(
-      _parents:unknown,
-      {filter}:ViewAllFilter,
-      context:Context
-    ) =>{
-      if(!context.user)  throw new GraphQLError("Unauthorized", {
+    viewAll: async (
+      _parents: unknown,
+      { filter }: ViewAllFilter,
+      context: Context,
+    ) => {
+      if (!context.user)
+        throw new GraphQLError("Unauthorized", {
           extensions: { code: "FORBIDDEN" },
         });
-        
-        return await viewAllEmployees(context.user.company_id,{filter})
 
-    }
+      return await viewAllEmployees(context.user.company_id, { filter });
+    },
   },
   Mutation: {
     login: async (
@@ -44,17 +49,36 @@ export const resolvers = {
       const registerResponse = await registerCompany(args);
       return registerResponse;
     },
-    addEmployee: async (_:unknown, args:{input:EmployeeDetails} , context: Context) => {
+    addEmployee: async (
+      _: unknown,
+      args: { input: EmployeeDetails },
+      context: Context,
+    ) => {
       if (!context.user || context.user.emp_role !== EmpRole.MANAGER) {
         throw new GraphQLError("Unauthorized", {
           extensions: { code: "FORBIDDEN" },
         });
       }
-   return await createNewEmp({
-    input: args.input,
-    company_id: context.user.company_id,
-  });
-
+      return await createNewEmp({
+        input: args.input,
+        company_id: context.user.company_id,
+      });
+    },
+    webClockIn: async (
+      _: unknown,
+      args: { timestamp: string },
+      context: Context,
+    ) => {
+      if (!context.user) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      }
+      return await webCheckIn({
+        company_id: context.user.company_id,
+        timestamp: args.timestamp,
+        emp_id: context.user.emp_id,
+      });
     },
   },
 };

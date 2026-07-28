@@ -28,7 +28,7 @@ const createNewEmp = async (args: CreateArgs) => {
   let manager: Employee | null = null;
   const companyRepo = AppDataSource.getRepository(Companies);
   const company = await companyRepo.findOneBy({ company_id: company_id });
-  const usersRepo = await AppDataSource.getRepository(Users);
+  const usersRepo = AppDataSource.getRepository(Users);
   if (!company) {
     throw new Error(`Company with id: ${company_id} not found`);
   }
