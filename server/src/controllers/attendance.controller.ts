@@ -100,8 +100,9 @@ async function fetchAttendanceLog(company_id:string,{filter}:AttendanceFilter){
   if(filter?.emp_dept){
     qb.andWhere("employee.emp_dept =:emp_dept",{emp_dept:filter.emp_dept})
   }
+  qb.orderBy("attendance.attendance_date","DESC")
   qb.skip(filter?.offset ?? 0)
-  qb.take(filter?.limit ?? 30)
+  qb.take(filter?.limit ?? 50)
 
   // console.log(await qb.getMany())
   // // return await qb.getMany()
