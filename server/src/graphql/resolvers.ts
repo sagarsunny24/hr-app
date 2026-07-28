@@ -45,7 +45,7 @@ export const resolvers = {
     refreshEndpoint:async(
       _parents: unknown,
       _args:unknown,
-      { req }: { req:Request,res: Response }
+      { req,res }: { req:Request,res: Response }
     ) =>{
       const cookies = req.cookies
       if(!cookies?.jwt) throw new GraphQLError("Unauthorized", {
@@ -53,7 +53,7 @@ export const resolvers = {
         });
       
         const refreshToken = cookies.jwt
-         const foundUser = await fetchUserByRefreshToken(refreshToken);
+         const foundUser = await fetchUserByRefreshToken(refreshToken,res);
         return foundUser;
         },
   },

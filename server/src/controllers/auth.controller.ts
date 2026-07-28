@@ -140,7 +140,7 @@ const loginUser = async (args: LoginArgs, res: Response) => {
   }
 };
 
-async function fetchUserByRefreshToken(refreshToken: string) {
+async function fetchUserByRefreshToken(refreshToken: string,res:Response) {
   const userRepo = AppDataSource.getRepository(Users);
   const empRepo = AppDataSource.getRepository(Employee);
 
@@ -177,6 +177,12 @@ async function fetchUserByRefreshToken(refreshToken: string) {
   });
   userfound.refresh_token = newrefreshToken;
   await userRepo.save(userfound);
+  res.cookie("jwt", newrefreshToken, {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: false,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
   return {
     accessToken,
     role: user.emp_role,
