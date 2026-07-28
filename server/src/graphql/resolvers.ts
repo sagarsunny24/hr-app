@@ -1,12 +1,11 @@
-import { loginUser, registerCompany } from "@/controllers/auth.controller.js";
-import { Mutation } from "@tanstack/react-query";
+import { loginUser, registerCompany ,fetchUserByRefreshToken} from "@/controllers/auth.controller.js";
+import type { Request } from "express";
 import {
   LoginArgs,
   RegisterArgs,
   EmployeeDetails,
   Context,
   EmpRole,
-  CompanyID,
   ViewAllFilter,
 } from "@hr-app/shared";
 import type { Response } from "express";
@@ -15,7 +14,7 @@ import {
   createNewEmp,
   viewAllEmployees,
 } from "@/controllers/employee.controller.js";
-import { Code } from "typeorm/driver/mongodb/bson.typings.js";
+
 import { webCheckIn,fetchAttendanceLog } from "@/controllers/attendance.controller.js";
 
 export const resolvers = {
@@ -42,7 +41,21 @@ export const resolvers = {
           extensions: { code: "FORBIDDEN" },
         });
         return await fetchAttendanceLog(context.user.company_id,{filter})
-    }
+    },
+    refreshEndpoint:async(
+      _parents: unknown,
+      _args:unknown,
+      { req }: { req:Request,res: Response }
+    ) =>{
+      const cookies = req.cookies
+      if(!cookies?.jwt) throw new GraphQLError("Unauthorized", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      
+        const refreshToken = cookies.jwt
+         const foundUser = await fetchUserByRefreshToken(refreshToken);
+        return foundUser;
+        },
   },
   Mutation: {
     login: async (

@@ -53,6 +53,7 @@ status:String!
 type Query {
 viewAll(filter: EmployeeFilter): EmployeeListResponse!
 attendanceLog(filter:AttendanceFilter) : [AttendanceLogResponse]!
+refreshEndpoint:LoginResponse
 }
 
 

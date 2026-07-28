@@ -40,6 +40,10 @@ export type LoginUserBody = {
 declare global {
   namespace Express {
     interface Request {
+              /** Parsed cookies that have not been signed */
+        cookies: Record<string, any>;
+        /** Parsed cookies that have been signed */
+        signedCookies: Record<string, any>;
       user: {
          emp_id?: string | null,
       emp_role?: EmpRole | null,

@@ -5,11 +5,16 @@ import { Employee } from "@/entities/Employee.js";
 import { Users } from "@/entities/Users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { LoginArgs, LoginUserBody, RegisterArgs } from "@hr-app/shared";
+import {
+  AuthPayload,
+  LoginArgs,
+  LoginUserBody,
+  RegisterArgs,
+} from "@hr-app/shared";
 import { envSchema } from "@/config/env.js";
 import { Response } from "express";
-
-const registerCompany = async (args:RegisterArgs) => {
+import { GraphQLError } from "graphql";
+const registerCompany = async (args: RegisterArgs) => {
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -30,7 +35,7 @@ const registerCompany = async (args:RegisterArgs) => {
       created_date,
       company_address,
       password,
-    } = args.input
+    } = args.input;
     const companyRepo = queryRunner.manager.getRepository(Companies);
     const employeeRepo = queryRunner.manager.getRepository(Employee);
     const userRepo = queryRunner.manager.getRepository(Users);
@@ -65,15 +70,15 @@ const registerCompany = async (args:RegisterArgs) => {
     return { message: "Company successfully created" };
   } catch (err) {
     await queryRunner.rollbackTransaction();
-    return err
+    return err;
   } finally {
     await queryRunner.release();
   }
 };
 
-const loginUser= async (args:LoginArgs,res:Response) => {
+const loginUser = async (args: LoginArgs, res: Response) => {
   try {
-    const { email, password }: LoginUserBody = args.input
+    const { email, password }: LoginUserBody = args.input;
     const userRepo = AppDataSource.getRepository(Users);
     const employeeRepo = AppDataSource.getRepository(Employee);
     const user = await userRepo.findOne({
@@ -89,7 +94,7 @@ const loginUser= async (args:LoginArgs,res:Response) => {
     } else {
       const match = await bcrypt.compare(password, user.password_hash);
       if (!match) {
-        throw new Error("Unauthorized" );
+        throw new Error("Unauthorized");
       } else {
         const employee = await employeeRepo.findOne({
           where: {
@@ -101,7 +106,7 @@ const loginUser= async (args:LoginArgs,res:Response) => {
           },
         });
         if (!employee) {
-          throw new Error("Employee does not exist" );
+          throw new Error("Employee does not exist");
         }
         const payload = {
           emp_id: employee.emp_id,
@@ -123,13 +128,60 @@ const loginUser= async (args:LoginArgs,res:Response) => {
           secure: false,
           maxAge: 604800000,
         });
-        return { accessToken: accessToken, role: employee.emp_role,profile_image_path:employee.profile_image_path };
-        
+        return {
+          accessToken: accessToken,
+          role: employee.emp_role,
+          profile_image_path: employee.profile_image_path,
+        };
       }
     }
   } catch (err) {
-    return err
+    return err;
   }
 };
 
-export { registerCompany, loginUser };
+async function fetchUserByRefreshToken(refreshToken: string) {
+  const userRepo = AppDataSource.getRepository(Users);
+  const empRepo = AppDataSource.getRepository(Employee);
+
+  let decoded: AuthPayload;
+
+  try {
+    decoded = jwt.verify(
+      refreshToken,
+      envSchema.REFRESH_TOKEN_SECRET,
+    ) as AuthPayload;
+  } catch {
+    throw new Error("Invalid refresh token")
+  }
+  const userfound = await userRepo.findOneBy({ refresh_token: refreshToken });
+  if (!userfound) throw new Error("User has no refresh token");
+  const user = await empRepo.findOne({
+    where: { emp_id: decoded.emp_id },
+    relations: {
+      company: true,
+    },
+  });
+  if (!user)
+    throw new Error("Employee not found")
+  const payload = {
+    emp_id: user.emp_id,
+    emp_role: user.emp_role,
+    company_id: user.company.company_id,
+  };
+  const accessToken = jwt.sign(payload, envSchema.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1d",
+  });
+  const newrefreshToken = jwt.sign(payload, envSchema.REFRESH_TOKEN_SECRET, {
+    expiresIn: "7d",
+  });
+  userfound.refresh_token = newrefreshToken;
+  await userRepo.save(userfound);
+  return {
+    accessToken,
+    role: user.emp_role,
+    profile_image_path: user.profile_image_path,
+  };
+}
+
+export { registerCompany, loginUser, fetchUserByRefreshToken };
