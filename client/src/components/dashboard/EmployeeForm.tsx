@@ -101,148 +101,211 @@ export default function EmployeeForm() {
     if (data) setManagers(data ?? []);
   }
   return (
-    <>
- 
-    
-    <Box component="form" onSubmit={handleSubmit}>
-      <Box>
-        <Typography>Add Employee</Typography>
-        <Button onClick={() => dispatch(openForm(false))} variant="outlined">
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        width:600,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        p: 3,
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 1,
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: 22,
+            fontWeight: 600,
+          }}
+        >
+          Add Employee
+        </Typography>
+
+        <Button
+          onClick={() => dispatch(openForm(false))}
+          variant="outlined"
+          sx={{
+            textTransform: "none",
+          }}
+        >
           Close
-        </Button>{" "}
+        </Button>
       </Box>
-      <Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
         <TextField
           label="Full Name"
           name="emp_name"
           required
-          variant="outlined"
           fullWidth
         />
+
         <TextField
           label="Email"
           name="emp_email"
           required
-          variant="outlined"
           fullWidth
         />
+
         <TextField
           label="Phone"
           name="emp_phone"
           required
-          variant="outlined"
           fullWidth
         />
 
         <FormControl fullWidth>
-          <InputLabel id="emp_dept"></InputLabel>
+          <InputLabel>Department</InputLabel>
           <Select
             name="emp_dept"
             required
-            fullWidth
             onChange={fetchOnChange}
             label="Department"
-            labelId="emp_dept"
-            sx={{ mb: 2 }}
           >
             <MenuItem value="frontend">Frontend</MenuItem>
             <MenuItem value="backend">Backend</MenuItem>
             <MenuItem value="hr">Human Resources</MenuItem>
             <MenuItem value="xecutive">Executive</MenuItem>
-            <MenuItem value="Engineering">Engineering</MenuItem>
+            <MenuItem value="Engineering">
+              Engineering
+            </MenuItem>
           </Select>
         </FormControl>
+
         <FormControl fullWidth>
-          <InputLabel id="emp_role"></InputLabel>
+          <InputLabel>Employee Type</InputLabel>
           <Select
             name="emp_role"
             required
-            fullWidth
             label="Employee Type"
-            labelId="emp_role"
-            sx={{ mb: 2 }}
           >
             <MenuItem value="hr">HR</MenuItem>
             <MenuItem value="manager">Manager</MenuItem>
             <MenuItem value="employee">Employee</MenuItem>
           </Select>
         </FormControl>
+
         <TextField
           label="Designation"
           name="emp_designation"
           required
-          variant="outlined"
           fullWidth
         />
+
         <TextField
           label="Joining Date"
           name="emp_joining_date"
-          variant="outlined"
           type="date"
+          fullWidth
+          slotProps={{ inputLabel: { shrink: true } }}
         />
+
         <FormControl fullWidth>
-          <InputLabel id="emp_status"></InputLabel>
+          <InputLabel>Employment Status</InputLabel>
           <Select
             name="emp_status"
             required
-            fullWidth
             label="Employment Status"
-            labelId="emp_status"
-            sx={{ mb: 2 }}
           >
             <MenuItem value="active">Active</MenuItem>
             <MenuItem value="probation">Probation</MenuItem>
             <MenuItem value="inactive">Inactive</MenuItem>
           </Select>
         </FormControl>
+
         <TextField
           label="Address"
           name="emp_address"
           required
-          variant="outlined"
           fullWidth
         />
-        <FormControl fullWidth>
-          <InputLabel id="emp-manager-label">Manager</InputLabel>
 
+        <FormControl fullWidth>
+          <InputLabel>Manager</InputLabel>
           <Select
             name="emp_manager_id"
-            labelId="emp-manager-label"
             label="Manager"
-            fullWidth
-            sx={{ mb: 2 }}
           >
-            <MenuItem key={"empty"} value={""}>
+            <MenuItem value="">
               No Manager
             </MenuItem>
+
             {managers?.map((manager) => (
-              <MenuItem key={manager.emp_id} value={manager.emp_id}>
-                <Avatar
-                  src={`${manager.profile_image_path}`}
-                  alt={manager.emp_name}
-                />
-                {manager.emp_name}
+              <MenuItem
+                key={manager.emp_id}
+                value={manager.emp_id}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <Avatar
+                    src={`${manager.profile_image_path}`}
+                    sx={{
+                      width: 32,
+                      height: 32,
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontSize: 14,
+                    }}
+                  >
+                    {manager.emp_name}
+                  </Typography>
+                </Box>
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <Box>
-          <Button>
-            Upload Image
-            <input
-              type="file"
-              name="profile_image_path"
-              onChange={handleImageChange}
-            />
-          </Button>
-        </Box>
-      </Box>
-      <Box>
-        <Button type="submit" variant="contained" size="large">
-          Submit
+
+        <Button
+          variant="outlined"
+          component="label"
+          sx={{
+            textTransform: "none",
+            justifyContent: "flex-start",
+          }}
+        >
+          Upload Image
+          <input
+            hidden
+            type="file"
+            name="profile_image_path"
+            onChange={handleImageChange}
+          />
         </Button>
       </Box>
+
+      <Button
+        type="submit"
+        variant="contained"
+        size="large"
+        sx={{
+          textTransform: "none",
+          fontSize: 15,
+          fontWeight: 600,
+        }}
+      >
+        Submit
+      </Button>
     </Box>
-    </>
   );
 }
