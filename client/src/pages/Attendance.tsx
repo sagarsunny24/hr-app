@@ -1,8 +1,10 @@
 import AttendanceTable from "../components/attendance/AttendanceTable";
-
+import useMonthlySummary from "../hooks/useMonthlySummary";
+import { PieChart } from '@mui/x-charts/PieChart';
 import {
   Box,
   Button,
+  Grid,
   Chip,
   Divider,
   Paper,
@@ -10,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import useViewAttendance from "../hooks/useViewAttendance";
-
+import { BarChart } from '@mui/x-charts/BarChart';
 import { useWebClockIn } from "../hooks/useWebClockIn";
 
 export default function Attendance() {
@@ -19,7 +21,9 @@ export default function Attendance() {
   const { data } = useViewAttendance({
     filter: {},
   });
-
+ 
+const summary = useMonthlySummary(data)
+console.log(summary)
   const today = new Date().toLocaleDateString("en-CA");
 
   const todayAttendance = data?.find(
@@ -55,7 +59,14 @@ const isCompleted = todayAttendance?.check_out;
         hour12: true,
       })
     : "--";
+const latest = summary?.[summary.length - 1];
 
+const pieData = [
+  { id: 0, value: latest?.present ?? 0, label: "Present" },
+  { id: 1, value: latest?.absent ?? 0, label: "Absent" },
+  { id: 2, value: latest?.late ?? 0, label: "Late" },
+  { id: 3, value: latest?.half_day ?? 0, label: "Half Day" },
+];
   return (
     <Box>
       <Paper
@@ -224,7 +235,79 @@ const isCompleted = todayAttendance?.check_out;
       >
         Attendance Log
       </Typography>
-      <Divider />      
+      <Divider />   
+         <Paper
+        elevation={0}
+        sx={{
+          border: 1,
+          borderColor: "divider",
+          borderRadius: 3,
+          p: 3,
+          mb: 3,
+        }}
+      >
+      <Typography> Previous Month Attendance details</Typography> 
+       <Grid container spacing={3}>
+         <Grid>
+                <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <PieChart
+          series={[
+            {
+              data: pieData,
+              innerRadius: 50,
+              outerRadius: 100,
+            },
+          ]}
+          width={300}
+          height={300}
+        />
+</Box>
+         </Grid>
+         <Grid>
+                <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+         <BarChart
+        xAxis={[
+          {
+            scaleType: "band",
+            data: summary?.map(item => item.month.slice(5)) ?? [],
+          },
+        ]}
+        series={[
+          {
+            data: summary?.map(item => item.present) ?? [],
+            label: "Present",
+          },
+          {
+            data: summary?.map(item => item.absent) ?? [],
+            label: "Absent",
+          },
+          {
+            data: summary?.map(item => item.late) ?? [],
+            label: "Late",
+          },
+        ]}
+        height={300}
+      />
+
+      </Box>
+</Grid>
+       </Grid>
+
+   
+     
+</Paper>   
       {data && <AttendanceTable data={data} />}
     </Box>
   );
