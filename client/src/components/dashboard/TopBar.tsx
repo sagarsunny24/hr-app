@@ -11,7 +11,7 @@ export default function TopBar() {
   const empCount = useAppSelector((state)=>state.dashboard.totalEmps)
   const dispatch = useAppDispatch();
   function handleOpen() {
-    dispatch(openForm(true));
+    dispatch(openForm({mode:'add',isOpen:true,employee:null}));
   }
   return (
     <Box

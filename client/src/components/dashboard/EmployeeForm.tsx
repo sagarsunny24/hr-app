@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 import { toast, Bounce } from "react-toastify";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   openForm,
   storeInfo,
@@ -21,7 +21,7 @@ import {
 import type { EmployeeDetails, MngrDetails } from "@hr-app/shared";
 import useAddEmployee from "../../hooks/useAddEmployee";
 import useManagerDetails from "../../hooks/useManagerDetails";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { uploadImage } from "../../supabase/uploadImage";
 export default function EmployeeForm() {
   const [managers, setManagers] = useState<MngrDetails[]>();
@@ -30,7 +30,11 @@ export default function EmployeeForm() {
   const dispatch = useAppDispatch();
   const addNewEmployee = useAddEmployee();
   const { fetchManagers } = useManagerDetails();
-
+  const employee = useAppSelector(state=>state.form.employee)
+  const mode = useAppSelector(state=>state.form.mode)
+  const isEditing = mode === 'edit';
+  const formRef = useRef<HTMLFormElement>(null);
+  
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) {
       return;
@@ -54,7 +58,12 @@ export default function EmployeeForm() {
         profile_image_path: publicUrl.current,
       } as EmployeeDetails;
       console.log("input:", input);
-      const res = await addNewEmployee({ input });
+
+      // if(isEditing){
+      //   editingfunction()
+      // }
+      // else{
+ const res = await addNewEmployee({ input });
       dispatch(
         storeInfo({
           email: res.addEmployee?.email,
@@ -76,8 +85,10 @@ export default function EmployeeForm() {
           theme: "light",
           transition: Bounce,
         });
+      // }
       }
-      dispatch(openForm(false));
+     
+      dispatch(openForm({isOpen:false}));
     } catch (err) {
       toast.error(`Error ${err} occured`, {
         position: "bottom-right",
@@ -100,9 +111,26 @@ export default function EmployeeForm() {
     // console.log(data);
     if (data) setManagers(data ?? []);
   }
+
+  useEffect(()=>{
+    if(isEditing && employee && formRef.current){
+      const form = formRef.current;
+
+      (form.elements.namedItem("emp_name") as HTMLInputElement).value = employee.emp_name;
+      (form.elements.namedItem("emp_address") as HTMLInputElement).value = employee.emp_address;
+      (form.elements.namedItem("emp_email") as HTMLInputElement).value = employee.emp_email;
+      (form.elements.namedItem("emp_phone") as HTMLInputElement).value = employee.emp_phone;
+      (form.elements.namedItem("emp_designation") as HTMLInputElement).value = employee.emp_designation;
+      (form.elements.namedItem("emp_role") as HTMLInputElement).value = employee.emp_role;
+      (form.elements.namedItem("emp_joining_date") as HTMLInputElement).value = employee.emp_joining_date;
+
+    }
+  },[employee,isEditing])
+  console.log(employee)
   return (
     <Box
       component="form"
+      ref={formRef}
       onSubmit={handleSubmit}
       sx={{
         width:600,
@@ -126,11 +154,11 @@ export default function EmployeeForm() {
             fontWeight: 600,
           }}
         >
-          Add Employee
+          {isEditing?'Edit Employee':'Add Employee'}
         </Typography>
 
         <Button
-          onClick={() => dispatch(openForm(false))}
+          onClick={() => dispatch(openForm({isOpen:false,employee:null}))}
           variant="outlined"
           sx={{
             textTransform: "none",
@@ -150,6 +178,7 @@ export default function EmployeeForm() {
         <TextField
           label="Full Name"
           name="emp_name"
+          value={employee?.emp_name }
           required
           fullWidth
         />
@@ -157,6 +186,7 @@ export default function EmployeeForm() {
         <TextField
           label="Email"
           name="emp_email"
+          value={employee?.emp_email}
           required
           fullWidth
         />
@@ -164,6 +194,7 @@ export default function EmployeeForm() {
         <TextField
           label="Phone"
           name="emp_phone"
+        value={employee?.emp_phone}
           required
           fullWidth
         />
@@ -173,6 +204,7 @@ export default function EmployeeForm() {
           <Select
             name="emp_dept"
             required
+            defaultValue={employee?.emp_dept ?? ''}
             onChange={fetchOnChange}
             label="Department"
           >
@@ -191,6 +223,7 @@ export default function EmployeeForm() {
           <Select
             name="emp_role"
             required
+            defaultValue={employee?.emp_role ?? ''}
             label="Employee Type"
           >
             <MenuItem value="hr">HR</MenuItem>
@@ -219,6 +252,7 @@ export default function EmployeeForm() {
           <Select
             name="emp_status"
             required
+            defaultValue={employee?.emp_status ?? ''}
             label="Employment Status"
           >
             <MenuItem value="active">Active</MenuItem>
@@ -239,6 +273,7 @@ export default function EmployeeForm() {
           <Select
             name="emp_manager_id"
             label="Manager"
+            defaultValue={employee?.emp_manager_id ?? ''}
           >
             <MenuItem value="">
               No Manager
@@ -304,7 +339,7 @@ export default function EmployeeForm() {
           fontWeight: 600,
         }}
       >
-        Submit
+        {isEditing ? 'Confirm Edit' : 'Submit'}
       </Button>
     </Box>
   );
