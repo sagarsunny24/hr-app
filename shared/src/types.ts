@@ -122,6 +122,7 @@ export type LoginMutationResponse = {
 };
 
 export type EmployeeDetails = {
+  emp_id:string;
   emp_name: string;
   emp_email: string;
   emp_phone: string;
@@ -151,6 +152,7 @@ export type ViewAllFilter = {
  }
 }
 export interface Employee {
+  emp_id:string;
   emp_name: string;
   emp_email: string;
   emp_phone: string;

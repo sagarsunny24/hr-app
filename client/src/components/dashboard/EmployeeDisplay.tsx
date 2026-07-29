@@ -48,7 +48,7 @@ export default function EmployeeDisplay() {
         }}
       >
          {employees?.map((employee) => (
-          <EmployeeCard key={employee.emp_email} employee={employee} />
+          <EmployeeCard key={employee.emp_id} employee={employee} />
         ))}
        
       </Box>

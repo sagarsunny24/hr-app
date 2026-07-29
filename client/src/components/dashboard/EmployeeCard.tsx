@@ -1,13 +1,21 @@
-import { Avatar, useTheme, Paper,Divider, Stack, Chip,IconButton, Box, Typography } from "@mui/material";
+import { Avatar, useTheme, Paper,Divider, Stack, Chip,IconButton, Box, Typography,Menu,MenuItem } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
 import type { EmployeeDetails } from "@hr-app/shared";
 import { green, red, yellow } from "@mui/material/colors";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import EmailOutlined from "@mui/icons-material/EmailOutlined";
 import CallOutlined from "@mui/icons-material/CallOutlined";
+import useDeleteEmp from "../../hooks/useDeleteEmp";
+import { useState } from "react";
+
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 interface CardProps {
   employee: Omit<EmployeeDetails,"emp_address"|"emp_manager_id">;
 }
 export default function EmployeeCard({ employee }: CardProps) {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const deleteEmployee = useDeleteEmp();
+    const open = Boolean(anchorEl)
   const theme = useTheme();
   const statusClr =
     employee.emp_status === "active"
@@ -15,6 +23,16 @@ export default function EmployeeCard({ employee }: CardProps) {
       : employee.emp_status === "probation"
         ? yellow
         : red;
+ const handleClose = () => {
+    setAnchorEl(null);
+  };
+ const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(anchorEl ? null: event.currentTarget );
+  };
+  const handleDelete = async()=>{
+    await deleteEmployee(employee.emp_id)
+    setAnchorEl(null)
+  }
   return (
     <Paper
       elevation={0}
@@ -28,6 +46,8 @@ export default function EmployeeCard({ employee }: CardProps) {
         boxShadow: "0px 4px 20px rgba(0,0,0,0.08)",
       }}
     >
+   
+     
       <Stack
         direction="row"
         sx={{ justifyContent: "space-between", alignItems: "center" }}
@@ -41,7 +61,36 @@ export default function EmployeeCard({ employee }: CardProps) {
             px: 1,
           }}
         />
-         <IconButton>
+         <IconButton onClick={handleClick}>
+           <Menu
+  sx={{
+    "& .MuiPaper-root": {
+      borderRadius: 2,
+      minWidth: 120,
+    },
+  }}
+  anchorEl={anchorEl}
+  open={open}
+  onClose={handleClose}
+>
+  <MenuItem onClick={handleClose} disableRipple>
+    <EditIcon sx={{ mr: 1 }} />
+    Edit
+  </MenuItem>
+
+  <MenuItem
+    onClick={handleDelete}
+    disableRipple
+  >
+    <DeleteForeverIcon
+      sx={{
+        mr: 1,
+        color: "error.main",
+      }}
+    />
+    Delete
+  </MenuItem>
+</Menu>
           <MoreHorizIcon />
         </IconButton>
       </Stack>
