@@ -116,7 +116,7 @@ const viewAllEmployees = async (
   qb.skip(filter?.offset ?? 0);
   qb.take(filter?.limit ?? 10);
   const [employees, total] = await qb.getManyAndCount();
-  console.log(await qb.getManyAndCount())
+  // console.log(await qb.getManyAndCount())
   const limit = filter?.limit ?? 10;
   const offset = filter?.offset ?? 0;
 
@@ -153,21 +153,26 @@ const deleteEmpByID = async (company_id: string, emp_id: string) => {
   return { message: `Employee ${userToDelete.emp_name} deleted sucessfully` };
 };
 
-const editEmployeeByID = async(args:{input:EmployeeDetails,emp_id:string},company_id:string) =>{
+const editEmployeeByID = async(args:EmployeeDetails,company_id:string) =>{
   try{
-const { emp_id, ...updates } = args.input;
+    console.log(args)
+const { emp_id,profile_image_path ,...updates } = args;
+
+
 const empRepo = AppDataSource.getRepository(Employee)
 const userToEdit = await empRepo.findOne({where:{
-  emp_id:args.emp_id,
+  emp_id:emp_id,
   company:{
     company_id:company_id
   }
 }})
-
+console.log(userToEdit)
 if(!userToEdit) throw new GraphQLError(`Employee of id ${emp_id} not found`);
 
 Object.assign(userToEdit, updates);
-
+if (profile_image_path) {
+      userToEdit.profile_image_path = profile_image_path;
+    }
 await empRepo.save(userToEdit);
 return {message: `Employee of id ${emp_id} edited successfully`}
   }catch{

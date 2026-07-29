@@ -18,6 +18,7 @@ import {
   storeInfo,
   empCredentials,
 } from "../../store/slices/formSlice";
+import useEditEmployee from "../../hooks/useEditEmployee";
 import type { EmployeeDetails, MngrDetails } from "@hr-app/shared";
 import useAddEmployee from "../../hooks/useAddEmployee";
 import useManagerDetails from "../../hooks/useManagerDetails";
@@ -34,7 +35,7 @@ export default function EmployeeForm() {
   const mode = useAppSelector((state) => state.form.mode);
   const isEditing = mode === "edit";
   const formRef = useRef<HTMLFormElement>(null);
-
+const editEmployee = useEditEmployee()
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) {
       return;
@@ -52,17 +53,32 @@ export default function EmployeeForm() {
       }
       const manager = data.emp_manager_id === "" ? null : data.emp_manager_id;
       console.log(publicUrl.current);
-      const input = {
+      let input = {
         ...data,
         emp_manager_id: manager,
         profile_image_path: publicUrl.current,
       } as EmployeeDetails;
       console.log("input:", input);
 
-      // if(isEditing){
-      //   editingfunction()
-      // }
-      // else{
+      if(isEditing &&employee){
+       input = {...input,emp_id:employee?.emp_id}
+       const res = await editEmployee({input})
+        if (res?.editEmployee?.message) {
+        toast.success(res.editEmployee.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        }
+        dispatch(openForm({ isOpen: false }));
+      }
+      else{
       const res = await addNewEmployee({ input });
       dispatch(
         storeInfo({
@@ -85,7 +101,7 @@ export default function EmployeeForm() {
           theme: "light",
           transition: Bounce,
         });
-        // }
+        }
       }
 
       dispatch(openForm({ isOpen: false }));
@@ -264,7 +280,7 @@ const data: MngrDetails[] =
           key={employee?.emp_id}
             name="emp_manager_id"
             label="Manager"
-            defaultValue={employee?.emp_manager.emp_id ?? ""}
+            defaultValue={employee?.emp_manager?.emp_id ?? ""}
           >
             <MenuItem value="">No Manager</MenuItem>
            
