@@ -153,4 +153,26 @@ const deleteEmpByID = async (company_id: string, emp_id: string) => {
   return { message: `Employee ${userToDelete.emp_name} deleted sucessfully` };
 };
 
-export { createNewEmp, viewAllEmployees, deleteEmpByID };
+const editEmployeeByID = async(args:{input:EmployeeDetails,emp_id:string},company_id:string) =>{
+  try{
+const { emp_id, ...updates } = args.input;
+const empRepo = AppDataSource.getRepository(Employee)
+const userToEdit = await empRepo.findOne({where:{
+  emp_id:args.emp_id,
+  company:{
+    company_id:company_id
+  }
+}})
+
+if(!userToEdit) throw new GraphQLError(`Employee of id ${emp_id} not found`);
+
+Object.assign(userToEdit, updates);
+
+await empRepo.save(userToEdit);
+return {message: `Employee of id ${emp_id} edited successfully`}
+  }catch{
+    return {message: `Employee editing failed`}
+  }
+  
+}
+export { createNewEmp, viewAllEmployees, deleteEmpByID,editEmployeeByID };

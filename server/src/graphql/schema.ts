@@ -113,12 +113,27 @@ type DeleteResponse{
 message:String!
 }
 
+input EditEmployeeInput {
+  emp_id: String!
+  emp_name: String
+  emp_email: String
+  emp_phone: String
+  emp_dept: String
+  emp_role: String
+  emp_designation: String
+  emp_joining_date: String
+  emp_status: String
+  emp_address: String
+  emp_manager_id: String
+  profile_image_path: String
+}
 type Mutation {
   login(input:LoginCredentials!): LoginResponse!
   register(input:RegisterDetails!):RegisterResponse!
   addEmployee(input:EmployeeDetails!):Response
   webClockIn(timestamp:String!):AttendanceResponse!
   deleteEmployee(emp_id:String!): DeleteResponse!
+  editEmployee(input:EditEmployeeInput!):Response
 }
 type Response {
 message:String!

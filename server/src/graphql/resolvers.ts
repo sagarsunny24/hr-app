@@ -13,7 +13,8 @@ import { GraphQLBoolean, GraphQLError } from "graphql";
 import {
   createNewEmp,
   viewAllEmployees,
-  deleteEmpByID
+  deleteEmpByID,
+  editEmployeeByID
 } from "@/controllers/employee.controller.js";
 
 import { webCheckIn,fetchAttendanceLog } from "@/controllers/attendance.controller.js";
@@ -117,6 +118,23 @@ export const resolvers = {
       }
       return await deleteEmpByID(context.user.company_id,args.emp_id)
 
+    },
+    editEmployee: async(
+       _: unknown,
+      args: {
+    input: {
+      emp_id: string;
+      input: EmployeeDetails;
+    };
+  },
+      context: Context,
+    )=>{
+      if(context.user?.emp_role !== EmpRole.HR){
+        throw new GraphQLError("Unauthorized",{
+          extensions: {code: "FORBIDDEN"},
+        })
+      }
+      return await editEmployeeByID(args.input,context.user.company_id);
     }
   },
 };
