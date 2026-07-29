@@ -9,10 +9,11 @@ import {
   ViewAllFilter,
 } from "@hr-app/shared";
 import type { Response } from "express";
-import { GraphQLError } from "graphql";
+import { GraphQLBoolean, GraphQLError } from "graphql";
 import {
   createNewEmp,
   viewAllEmployees,
+  deleteEmpByID
 } from "@/controllers/employee.controller.js";
 
 import { webCheckIn,fetchAttendanceLog } from "@/controllers/attendance.controller.js";
@@ -78,7 +79,7 @@ export const resolvers = {
       args: { input: EmployeeDetails },
       context: Context,
     ) => {
-      if (!context.user || context.user.emp_role !== EmpRole.MANAGER) {
+      if (!context.user || context.user.emp_role !== EmpRole.HR) {
         throw new GraphQLError("Unauthorized", {
           extensions: { code: "FORBIDDEN" },
         });
@@ -104,5 +105,18 @@ export const resolvers = {
         emp_id: context.user.emp_id,
       });
     },
+    deleteEmployee: async(
+       _: unknown,
+      args: { emp_id: string },
+      context: Context,
+    )=>{
+      if(context.user?.emp_role !== EmpRole.HR){
+        throw new GraphQLError("Unauthorized",{
+          extensions: {code: "FORBIDDEN"},
+        })
+      }
+      return await deleteEmpByID(context.user.company_id,args.emp_id)
+
+    }
   },
 };

@@ -101,12 +101,16 @@ totalHours:Float
 status:String!
 
 }
+type DeleteResponse{
+message:String!
+}
 
 type Mutation {
   login(input:LoginCredentials!): LoginResponse!
   register(input:RegisterDetails!):RegisterResponse!
   addEmployee(input:EmployeeDetails!):Response
   webClockIn(timestamp:String!):AttendanceResponse!
+  deleteEmployee(emp_id:String!): DeleteResponse!
 }
 type Response {
 message:String!

@@ -4,6 +4,7 @@ import { Employee } from "@/entities/Employee.js";
 import { Companies } from "@/entities/Companies.js";
 import { Users } from "@/entities/Users.js";
 import bcrypt from "bcrypt";
+import { GraphQLError } from "graphql";
 type CreateArgs = {
   input: EmployeeDetails;
   company_id: string;
@@ -34,7 +35,6 @@ const createNewEmp = async (args: CreateArgs) => {
   }
   if (emp_manager_id) {
     manager = await employeeRepo.findOneBy({ emp_id: emp_manager_id });
-
   }
   // if (!manager) {
   //   throw new Error(`Manager with id: ${emp_manager_id} not found`);
@@ -89,12 +89,10 @@ const viewAllEmployees = async (
 
   qb.where("employee.company_id = :company_id", { company_id });
 
-  if(filter?.emp_name && filter?.emp_name?.trim() !== ""){
-    qb.andWhere("employee.emp_name ILIKE :name",{
-      name:`%${filter.emp_name.trim()}%` 
-
-    })
-   
+  if (filter?.emp_name && filter?.emp_name?.trim() !== "") {
+    qb.andWhere("employee.emp_name ILIKE :name", {
+      name: `%${filter.emp_name.trim()}%`,
+    });
   }
   if (filter?.emp_dept) {
     qb.andWhere("employee.emp_dept = :dept", { dept: filter.emp_dept });
@@ -118,18 +116,18 @@ const viewAllEmployees = async (
   }
   qb.skip(filter?.offset ?? 0);
   qb.take(filter?.limit ?? 10);
-  const [employees,total] = await qb.getManyAndCount()
+  const [employees, total] = await qb.getManyAndCount();
   const limit = filter?.limit ?? 10;
-const offset = filter?.offset ?? 0;
+  const offset = filter?.offset ?? 0;
 
-const page = Math.floor(offset / limit) + 1;
+  const page = Math.floor(offset / limit) + 1;
   return {
-    data:employees,
-    total:total,
+    data: employees,
+    total: total,
     page,
     limit,
-    totalPages: Math.ceil(total/limit),
-  }
+    totalPages: Math.ceil(total / limit),
+  };
 
   // const company = await companyRepo.findOneBy({company_id:company_id})
   // if(!company){
@@ -139,4 +137,20 @@ const page = Math.floor(offset / limit) + 1;
   //  return allEmployees;
 };
 
-export { createNewEmp, viewAllEmployees };
+const deleteEmpByID = async (company_id: string, emp_id: string) => {
+  const empRepo = AppDataSource.getRepository(Employee);
+  const userToDelete = await empRepo.findOne({
+    where: {
+      emp_id: emp_id,
+      company: {
+        company_id: company_id,
+      },
+    },
+  });
+  if (!userToDelete)
+    throw new GraphQLError(`Employee of id ${emp_id} not found`);
+  await empRepo.remove(userToDelete);
+  return { message: `Employee ${userToDelete.emp_name} deleted sucessfully` };
+};
+
+export { createNewEmp, viewAllEmployees, deleteEmpByID };
