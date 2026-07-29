@@ -40,7 +40,7 @@ export const resolvers = {
         throw new GraphQLError("Unauthorized", {
           extensions: { code: "FORBIDDEN" },
         });
-        return await fetchAttendanceLog(context.user.company_id,{filter})
+        return await fetchAttendanceLog(context.user.company_id,context.user.emp_id,{filter})
     },
     refreshEndpoint:async(
       _parents: unknown,

@@ -44,6 +44,8 @@ type EmployeeListResponse {
   }
   type AttendanceLogResponse {
   attendance_id: Int
+  emp_id:String
+  emp_name:String
 attendance_date:String
 check_in:String
 check_out:String

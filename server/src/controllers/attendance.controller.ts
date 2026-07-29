@@ -90,12 +90,13 @@ const status =
   }
 }
 
-async function fetchAttendanceLog(company_id:string,{filter}:AttendanceFilter){
+async function fetchAttendanceLog(company_id:string,emp_id:string,{filter}:AttendanceFilter){
+  console.log(filter)
   const attendanceRepo = AppDataSource.getRepository(Attendance)
   const qb = attendanceRepo.createQueryBuilder("attendance").leftJoinAndSelect("attendance.emp","employee").where("attendance.company_id = :companyId",{companyId:company_id});
 
-  if(filter?.emp_id){
-    qb.andWhere("attendance.emp_id =:emp_id",{emp_id:filter.emp_id})
+  if(filter?.emp_id || emp_id){
+    qb.andWhere("employee.emp_id =:emp_id",{emp_id:filter.emp_id ?? emp_id })
   }
   if(filter?.emp_dept){
     qb.andWhere("employee.emp_dept =:emp_dept",{emp_dept:filter.emp_dept})
@@ -105,10 +106,21 @@ async function fetchAttendanceLog(company_id:string,{filter}:AttendanceFilter){
   qb.take(filter?.limit ?? 50)
 
   // console.log(await qb.getMany())
+  const logs = await qb.getMany();
+
+return logs.map(log => ({
+  attendance_id: log.attendance_id,
+  attendance_date: log.attendance_date,
+  check_in: log.check_in,
+  check_out: log.check_out,
+  total_hours: log.total_hours,
+  status: log.status,
+  emp_id: log.emp.emp_id,
+  emp_name: log.emp.emp_name,
+}));
   // // return await qb.getMany()
   // const {attendance_id,check_in,check_out,attendance_date,status} =await qb.getMany()
   // console.log(attendance_id,check_in)
-  return await qb.getMany()
 }
 
 export {webCheckIn,fetchAttendanceLog}
