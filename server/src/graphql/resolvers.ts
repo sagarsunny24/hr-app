@@ -122,10 +122,8 @@ export const resolvers = {
     editEmployee: async(
        _: unknown,
       args: {
-    input: {
-      emp_id: string;
-      input: EmployeeDetails;
-    };
+    input:EmployeeDetails;
+  
   },
       context: Context,
     )=>{
