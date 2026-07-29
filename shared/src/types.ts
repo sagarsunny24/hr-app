@@ -134,6 +134,11 @@ export type EmployeeDetails = {
   emp_address: string;
 profile_image_path: string | null;
 emp_manager_id:string | null;
+emp_manager:{
+    emp_id:string;
+    profile_image_path:string;
+    emp_name:string;
+  }
 
 }
 export type CompanyID =string;
@@ -161,6 +166,12 @@ export interface Employee {
   emp_designation: string;
   emp_joining_date: string;
   emp_status: EmpStatus;
+  emp_adress:string
+  emp_manager:{
+    emp_id:string;
+    profile_image_path:string;
+    emp_name:string;
+  }
   profile_image_path: string;
 }
 

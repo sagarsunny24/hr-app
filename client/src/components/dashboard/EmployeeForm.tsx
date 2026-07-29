@@ -30,11 +30,11 @@ export default function EmployeeForm() {
   const dispatch = useAppDispatch();
   const addNewEmployee = useAddEmployee();
   const { fetchManagers } = useManagerDetails();
-  const employee = useAppSelector(state=>state.form.employee)
-  const mode = useAppSelector(state=>state.form.mode)
-  const isEditing = mode === 'edit';
+  const employee = useAppSelector((state) => state.form.employee);
+  const mode = useAppSelector((state) => state.form.mode);
+  const isEditing = mode === "edit";
   const formRef = useRef<HTMLFormElement>(null);
-  
+
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) {
       return;
@@ -63,7 +63,7 @@ export default function EmployeeForm() {
       //   editingfunction()
       // }
       // else{
- const res = await addNewEmployee({ input });
+      const res = await addNewEmployee({ input });
       dispatch(
         storeInfo({
           email: res.addEmployee?.email,
@@ -85,10 +85,10 @@ export default function EmployeeForm() {
           theme: "light",
           transition: Bounce,
         });
-      // }
+        // }
       }
-     
-      dispatch(openForm({isOpen:false}));
+
+      dispatch(openForm({ isOpen: false }));
     } catch (err) {
       toast.error(`Error ${err} occured`, {
         position: "bottom-right",
@@ -111,29 +111,44 @@ export default function EmployeeForm() {
     // console.log(data);
     if (data) setManagers(data ?? []);
   }
-
-  useEffect(()=>{
-    if(isEditing && employee && formRef.current){
+useEffect(()=>{
+   const fetchforEditing = async()=> {
+const data: MngrDetails[] =
+      (await fetchManagers({ filter: { emp_dept:employee?.emp_dept, emp_role: "manager" } })) ??
+      [];
+    // console.log(data);
+    if (data) setManagers(data ?? []);
+  }
+  fetchforEditing()
+},[employee?.emp_dept,fetchManagers])
+  useEffect(() => {
+    if (isEditing && employee && formRef.current) {
       const form = formRef.current;
 
-      (form.elements.namedItem("emp_name") as HTMLInputElement).value = employee.emp_name;
-      (form.elements.namedItem("emp_address") as HTMLInputElement).value = employee.emp_address;
-      (form.elements.namedItem("emp_email") as HTMLInputElement).value = employee.emp_email;
-      (form.elements.namedItem("emp_phone") as HTMLInputElement).value = employee.emp_phone;
-      (form.elements.namedItem("emp_designation") as HTMLInputElement).value = employee.emp_designation;
-      (form.elements.namedItem("emp_role") as HTMLInputElement).value = employee.emp_role;
-      (form.elements.namedItem("emp_joining_date") as HTMLInputElement).value = employee.emp_joining_date;
-
+      (form.elements.namedItem("emp_name") as HTMLInputElement).value =
+        employee.emp_name;
+      (form.elements.namedItem("emp_address") as HTMLInputElement).value =
+        employee.emp_address;
+      (form.elements.namedItem("emp_email") as HTMLInputElement).value =
+        employee.emp_email;
+      (form.elements.namedItem("emp_phone") as HTMLInputElement).value =
+        employee.emp_phone;
+      (form.elements.namedItem("emp_designation") as HTMLInputElement).value =
+        employee.emp_designation;
+      (form.elements.namedItem("emp_role") as HTMLInputElement).value =
+        employee.emp_role;
+      (form.elements.namedItem("emp_joining_date") as HTMLInputElement).value =
+        employee.emp_joining_date;
     }
-  },[employee,isEditing])
-  console.log(employee)
+  }, [employee, isEditing]);
+  console.log(employee);
   return (
     <Box
       component="form"
       ref={formRef}
       onSubmit={handleSubmit}
       sx={{
-        width:600,
+        width: 600,
         display: "flex",
         flexDirection: "column",
         gap: 2,
@@ -154,11 +169,11 @@ export default function EmployeeForm() {
             fontWeight: 600,
           }}
         >
-          {isEditing?'Edit Employee':'Add Employee'}
+          {isEditing ? "Edit Employee" : "Add Employee"}
         </Typography>
 
         <Button
-          onClick={() => dispatch(openForm({isOpen:false,employee:null}))}
+          onClick={() => dispatch(openForm({ isOpen: false, employee: null }))}
           variant="outlined"
           sx={{
             textTransform: "none",
@@ -175,36 +190,18 @@ export default function EmployeeForm() {
           gap: 2,
         }}
       >
-        <TextField
-          label="Full Name"
-          name="emp_name"
-          value={employee?.emp_name }
-          required
-          fullWidth
-        />
+        <TextField label="Full Name" name="emp_name" required fullWidth />
 
-        <TextField
-          label="Email"
-          name="emp_email"
-          value={employee?.emp_email}
-          required
-          fullWidth
-        />
+        <TextField label="Email" name="emp_email" required fullWidth />
 
-        <TextField
-          label="Phone"
-          name="emp_phone"
-        value={employee?.emp_phone}
-          required
-          fullWidth
-        />
+        <TextField label="Phone" name="emp_phone" required fullWidth />
 
         <FormControl fullWidth>
           <InputLabel>Department</InputLabel>
           <Select
             name="emp_dept"
             required
-            defaultValue={employee?.emp_dept ?? ''}
+            defaultValue={employee?.emp_dept ?? ""}
             onChange={fetchOnChange}
             label="Department"
           >
@@ -212,9 +209,7 @@ export default function EmployeeForm() {
             <MenuItem value="backend">Backend</MenuItem>
             <MenuItem value="hr">Human Resources</MenuItem>
             <MenuItem value="xecutive">Executive</MenuItem>
-            <MenuItem value="Engineering">
-              Engineering
-            </MenuItem>
+            <MenuItem value="Engineering">Engineering</MenuItem>
           </Select>
         </FormControl>
 
@@ -223,7 +218,7 @@ export default function EmployeeForm() {
           <Select
             name="emp_role"
             required
-            defaultValue={employee?.emp_role ?? ''}
+            defaultValue={employee?.emp_role ?? ""}
             label="Employee Type"
           >
             <MenuItem value="hr">HR</MenuItem>
@@ -252,7 +247,7 @@ export default function EmployeeForm() {
           <Select
             name="emp_status"
             required
-            defaultValue={employee?.emp_status ?? ''}
+            defaultValue={employee?.emp_status ?? ""}
             label="Employment Status"
           >
             <MenuItem value="active">Active</MenuItem>
@@ -261,29 +256,20 @@ export default function EmployeeForm() {
           </Select>
         </FormControl>
 
-        <TextField
-          label="Address"
-          name="emp_address"
-          required
-          fullWidth
-        />
+        <TextField label="Address" name="emp_address" required fullWidth />
 
         <FormControl fullWidth>
           <InputLabel>Manager</InputLabel>
           <Select
+          key={employee?.emp_id}
             name="emp_manager_id"
             label="Manager"
-            defaultValue={employee?.emp_manager_id ?? ''}
+            defaultValue={employee?.emp_manager.emp_id ?? ""}
           >
-            <MenuItem value="">
-              No Manager
-            </MenuItem>
-
+            <MenuItem value="">No Manager</MenuItem>
+           
             {managers?.map((manager) => (
-              <MenuItem
-                key={manager.emp_id}
-                value={manager.emp_id}
-              >
+              <MenuItem key={manager.emp_id} value={manager.emp_id}>
                 <Box
                   sx={{
                     display: "flex",
@@ -339,7 +325,7 @@ export default function EmployeeForm() {
           fontWeight: 600,
         }}
       >
-        {isEditing ? 'Confirm Edit' : 'Submit'}
+        {isEditing ? "Confirm Edit" : "Submit"}
       </Button>
     </Box>
   );

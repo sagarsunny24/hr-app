@@ -86,8 +86,7 @@ const viewAllEmployees = async (
   const employeeRepo = AppDataSource.getRepository(Employee);
 
   const qb = employeeRepo.createQueryBuilder("employee");
-
-  qb.where("employee.company_id = :company_id", { company_id });
+  qb.leftJoinAndSelect("employee.emp_manager","manager").where("employee.company_id = :company_id", { company_id });
 
   if (filter?.emp_name && filter?.emp_name?.trim() !== "") {
     qb.andWhere("employee.emp_name ILIKE :name", {
@@ -117,6 +116,7 @@ const viewAllEmployees = async (
   qb.skip(filter?.offset ?? 0);
   qb.take(filter?.limit ?? 10);
   const [employees, total] = await qb.getManyAndCount();
+  console.log(await qb.getManyAndCount())
   const limit = filter?.limit ?? 10;
   const offset = filter?.offset ?? 0;
 

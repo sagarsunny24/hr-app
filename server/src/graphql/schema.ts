@@ -15,7 +15,15 @@ emp_name: String!
   emp_status: String!
   emp_designation: String!
   profile_image_path: String
+  emp_address:String
+  emp_manager:Manager
+  
   }
+  type Manager {
+  emp_id: String
+  emp_name: String
+  profile_image_path: String
+}
 type EmployeeListResponse {
   data: [EmployeeResponse!]!
   total: Int!
