@@ -207,10 +207,15 @@ export interface AddEmpRes {
 }
 
 export interface EditEmpRes {
-  editEmployee?:{
+ editEmployee:{
     message:string
   }
 }
+
+export interface EditEmpVars {
+  input: EmployeeDetails;
+}
+
 export interface ClockInArgs {
   company_id:string;
   emp_id:string;
