@@ -11,6 +11,8 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
+import { hasPermission } from "../../permissions/auth";
+import { useAppSelector } from "../../store/hooks";
 import EditIcon from "@mui/icons-material/Edit";
 import type { EmployeeDetails } from "@hr-app/shared";
 import { green, red, yellow } from "@mui/material/colors";
@@ -26,6 +28,7 @@ interface CardProps {
   employee: Omit<EmployeeDetails, "emp_address" | "emp_manager_id">;
 }
 export default function EmployeeCard({ employee }: CardProps) {
+  const user = useAppSelector(state=>state.auth.user)
   const dispatch = useAppDispatch()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const deleteEmployee = useDeleteEmp();
@@ -89,12 +92,16 @@ export default function EmployeeCard({ employee }: CardProps) {
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleEdit} disableRipple>
+         {hasPermission(user,"edit:employee") &&
+          <MenuItem onClick={handleEdit} disableRipple>
               <EditIcon sx={{ mr: 1 }} />
               Edit
             </MenuItem>
+         
+         }  
 
-            <MenuItem onClick={handleDelete} disableRipple>
+           {hasPermission(user,"delete:employee") &&
+           <MenuItem onClick={handleDelete} disableRipple>
               <DeleteForeverIcon
                 sx={{
                   mr: 1,
@@ -103,6 +110,7 @@ export default function EmployeeCard({ employee }: CardProps) {
               />
               Delete
             </MenuItem>
+           }  
           </Menu>
           <MoreHorizIcon />
         </IconButton>
@@ -179,6 +187,19 @@ export default function EmployeeCard({ employee }: CardProps) {
                 {employee.emp_phone}
               </Typography>
             </Stack>
+            {employee.emp_manager &&
+             <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+            <Typography color="primary">Managed by:</Typography>
+               <Avatar
+          src={`${employee?.emp_manager?.profile_image_path}`}
+          alt={employee?.emp_manager?.emp_name}
+      
+        />
+              <Typography color="primary" sx={{ fontSize: 14 }}>
+                {employee?.emp_manager?.emp_name}
+              </Typography>
+            </Stack>
+          } 
           </Stack>
         </Box>
       </Stack>

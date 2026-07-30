@@ -6,7 +6,8 @@ const ROLES = {
     "view:dashboard",
     "create:employee",
     "delete:employee",
-    "view:employee"
+    "view:employee",
+    "edit:employee",
   ],
   employee:[
     "view:personal",
