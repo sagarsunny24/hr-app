@@ -37,7 +37,7 @@ interface AttTableProps {
 
 export default function AttendanceTable({data}:AttTableProps) {
   return (
-    <TableContainer component={Paper} sx={{maxWidth:1000}}>
+    <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
